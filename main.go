@@ -6,6 +6,7 @@ import (
 	"os"
 	"uwbwebapp/conf"
 	"uwbwebapp/pkg/dao"
+	"uwbwebapp/pkg/services"
 	"uwbwebapp/web"
 
 	"github.com/ahmetb/go-linq/v3"
@@ -38,6 +39,8 @@ func main() {
 	app.AllowMethods("GET,POST,PUT,DELETE,OPTIONS")
 	app.Use(web.Before)
 	web.RegisterServices(app)
+	app.Options("/upload", web.Cors)
+	app.Post("/upload", services.WSUploadFile) // 测试上传文件
 	ros := app.GetRoutes()
 	var paths []string
 	for _, r := range ros {

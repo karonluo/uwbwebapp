@@ -27,6 +27,7 @@ type WebConfig struct {
 	Port                string
 	SessionExpireMinute int
 	Version             string
+	PostDataMaxMBSize   int64
 	DBConf              DBConfiguration
 	RedisConf           RedisConfiguration
 	MQTTServerConf      MQTTServerConfiguration

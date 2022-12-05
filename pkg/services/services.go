@@ -1,11 +1,21 @@
 package services
 
 import (
+	"path"
+	"path/filepath"
+	"uwbwebapp/conf"
 	"uwbwebapp/pkg/biz"
 	"uwbwebapp/pkg/tools"
 
+	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
 )
+
+// Web Service Message
+type WebServiceMessage struct {
+	StatusCode int
+	Message    interface{}
+}
 
 // 列举场地所有负责人
 func WSEnumSiteOwners(ctx iris.Context) {
@@ -40,8 +50,25 @@ func WSSetSiteOwners(ctx iris.Context) {
 	ctx.JSON(message)
 }
 
-// Web Service Message
-type WebServiceMessage struct {
-	StatusCode int
-	Message    interface{}
+func WSUploadFile(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+	ctx.SetMaxRequestBodySize(conf.WebConfiguration.PostDataMaxMBSize * iris.MB)
+	file, fileHeader, err := ctx.FormFile("file")
+	if err != nil {
+		message.StatusCode = 500
+		message.Message = err.Error()
+	} else {
+		defer file.Close()
+		dest := filepath.Join("./uploads", uuid.New().String()+path.Ext(fileHeader.Filename))
+		_, err = ctx.SaveFormFile(fileHeader, dest)
+		if err != nil {
+			message.StatusCode = 500
+			message.Message = err.Error()
+		} else {
+			message.StatusCode = 200
+			message.Message = dest
+		}
+	}
+
+	ctx.JSON(message)
 }

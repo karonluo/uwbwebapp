@@ -59,7 +59,6 @@ func Before(ctx iris.Context) {
 			ctx.Next()
 			return
 		}
-
 		if res {
 			acl, err := biz.GetLoginInformation(authorization, "acl") // 获取访问权限
 			if err != nil {
@@ -159,6 +158,7 @@ func RegisterServices(app *iris.Application) {
 	RegisterSportsCompanyServices(app)
 	RegisterSwimmerServices(app)
 	RegisterSiteServices(app)
+
 	// app.Options("/siteowners/list", Cors)
 	// app.Get("/siteowners/list", services.WSEnumSiteOwners) //列举场地负责人
 	// app.Put("/siteowners/setowners", services.WSSetSiteOwners) //设置场地负责人

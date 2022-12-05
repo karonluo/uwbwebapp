@@ -2,6 +2,7 @@
 	"Version":"1.0",
 	"Port": ":8001",
 	"SessionExpireMinute": 20,
+	"PostDataMaxMBSize": 10,
 	"RedisConf": {
 		"Port": "6379",
 		"Password": "",
@@ -9,9 +10,9 @@
 		"DBId": 0
 	},
 	"DBConf": {
-		"Port": "54320",
+		"Port": "5432",
 		"User": "postgres",
-		"Host": "121.4.26.158",
+		"Host": "127.0.0.1",
 		"Password": "pass@@word123",
 		"DBName": "db_uwb"
 	},
