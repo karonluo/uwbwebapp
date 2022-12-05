@@ -8,4 +8,5 @@
 |3|redis|6.0|缓存数据库|
 |4|gorm||ORM 框架|
 |5|iris||go 语言 WEB 框架|
+|6|EMQX|MQTT 服务|
 
