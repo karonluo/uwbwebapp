@@ -1,0 +1,34 @@
+{
+	"Version":"1.0",
+	"Port": ":8001",
+	"SessionExpireMinute": 20,
+	"RedisConf": {
+		"Port": "6379",
+		"Password": "",
+		"Host": "127.0.0.1",
+		"DBId": 0
+	},
+	"DBConf": {
+		"Port": "54320",
+		"User": "postgres",
+		"Host": "121.4.26.158",
+		"Password": "pass@@word123",
+		"DBName": "db_uwb"
+	},
+	"MQTTServerConf": {
+		"Port": 1883,
+		"WebSockertPort": 8083,
+		"Broker": "127.0.0.1",
+		"User": "admin",
+		"Password": "pass@@word123"
+	},
+	"EmailSmtpServerConf": {
+		"Host": "smtp.126.com",
+		"Port": ":25",
+		"UserName": "karonsoft@126.com",
+		"Password": "KNAQGVHBXASFHBPQ",
+		"Identity": "",
+		"ResetSysUserPasswordEmailTemplate": "点击<a href='http://172.0.0.1/resetpwd?token={{token}}' target='_blank'>重置密码 </a>或进入重置密码的页面输入验证码 {{token}} <p> 该验证码在 {{timeout}} 分钟内有效",
+		"ResetSysUserPasswordEmailTimeout": 10
+	}
+}
