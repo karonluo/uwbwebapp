@@ -95,7 +95,7 @@ func RegisterSysUserServices(app *iris.Application) {
 	app.Options("/sysuser", Cors)
 	app.Post("/sysuser", services.WSCreateUser)                 //新增系统用户
 	app.Delete("/sysuser", services.WSDeleteSysUser)            //删除系统用户
-	app.Put("/sysuser", services.WSUpdateSite)                  // 修改系统用户
+	app.Put("/sysuser", services.WSUpdateSysUser)               // 修改系统用户
 	app.Get("/sysuser", services.WSGetSysUserFromDBByLoginName) //获取系统用户信息(通过登录名)
 
 	app.Options("/login", Cors)
@@ -130,9 +130,9 @@ func RegisterSportsCompanyServices(app *iris.Application) {
 // 绑定游泳者相关WEB服务
 func RegisterSwimmerServices(app *iris.Application) {
 	app.Options("/swimmer", Cors)
-	app.Post("/swimmer", services.WSCreateSwimmer)    //创建游泳者信息
+	app.Post("/swimmer", services.WSCreateSwimmer)    // 创建游泳者信息
 	app.Get("/swimmer", services.WSGetSwimmersById)   // 获取游泳者信息
-	app.Delete("/swimmer", services.WSDeleteSwimmers) //批量删除游泳者信息
+	app.Delete("/swimmer", services.WSDeleteSwimmers) // 批量删除游泳者信息
 	app.Put("/swimmer", services.WSUpdateSwimmer)     // 修改游泳者（会员）信息
 
 	app.Options("/swimmer/query", Cors)
@@ -143,9 +143,9 @@ func RegisterSwimmerServices(app *iris.Application) {
 // 绑定场地相关WEB服务
 func RegisterSiteServices(app *iris.Application) {
 	app.Options("/site", Cors)
-	app.Post("/site", services.WSCreateSite)    //创建查询场地信息
+	app.Post("/site", services.WSCreateSite)    // 创建查询场地信息
 	app.Get("/site", services.WSGetSiteById)    // 获取查询场地信息
-	app.Delete("/site", services.WSDeleteSites) //批量删除场地信息
+	app.Delete("/site", services.WSDeleteSites) // 批量删除场地信息
 	app.Put("/site", services.WSUpdateSite)     // 修改场地信息
 
 	app.Options("/site/query", Cors)
