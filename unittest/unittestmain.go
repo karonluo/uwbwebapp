@@ -63,12 +63,22 @@ func main() {
 	dao.InitDatabase()
 	dao.InitRedisDatabase()
 	fmt.Println(uuid.New().String())
-	site, err := dao.GetSiteById("847c2917-a3db-4f47-916e-ff3421eb64e1")
-	if err != nil {
-		fmt.Println(err.Error())
+	var site entities.Site
+	fieldSize, err := tools.GetDatabaseTableFieldSize(site, "Users")
+	if err == nil {
+		fmt.Println(fieldSize)
 	} else {
-		fmt.Println(site.Address)
+		fmt.Println(err.Error())
 	}
+
+	var strTest = "0123456789"
+	fmt.Println(strTest[0:10])
+	// site, err := dao.GetSiteById("847c2917-a3db-4f47-916e-ff3421eb64e1")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// } else {
+	// 	fmt.Println(site.Address)
+	// }
 
 	// testRefVariable(&site) // 传输的是对象内存地址而非对象实例，因此内存地址中的值，发生变化时 site 本身的值也会跟着变化，这个和直接传输实例有根本性的不同，实例通过传输形成的时新的实例。
 	// fmt.Println(site.Address)
@@ -87,15 +97,15 @@ func main() {
 	// 	fmt.Println("delete sports_companies is success")
 	// }
 
-	dictvaleus, err := dao.GetSystemDictValues("job_title")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	for _, dv := range dictvaleus {
-		fmt.Println(dv.Value)
-	}
-	dictValue, _ := dao.GetSystemDictValue("0001")
-	fmt.Println(dictValue.Value)
+	// dictvaleus, err := dao.GetSystemDictValues("job_title")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	// for _, dv := range dictvaleus {
+	// 	fmt.Println(dv.Value)
+	// }
+	// dictValue, _ := dao.GetSystemDictValue("1001")
+	// fmt.Println(dictValue.Value)
 
 	// var condition entities.QueryCondition
 	// condition.LikeValue = "98"

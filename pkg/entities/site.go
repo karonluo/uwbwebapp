@@ -20,7 +20,7 @@ type Site struct {
 	Id             string    `gorm:"primaryKey" json:"Id"` // 唯一编号
 	Modifier       string    `json:"Modifier"`
 	ModifyDatetime time.Time `json:"ModifyDatetime"`
-	Users          string    `json:"Users"` // 在绑定系统用户时自动填写，用户不能在界面上编辑文字的方式修改，多个用户显示名以逗号分割。
+	Users          string    `gorm:"size:128" json:"Users"` // 在绑定系统用户时自动填写，用户不能在界面上编辑文字的方式修改，多个用户显示名以逗号分割。
 	DisplayName    string    `json:"DisplayName"`
 }
 

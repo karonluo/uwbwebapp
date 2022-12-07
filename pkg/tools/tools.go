@@ -104,3 +104,17 @@ func Utf8ToGbk(s []byte) ([]byte, error) {
 	}
 	return d, nil
 }
+
+func GetDatabaseTableFieldSize(entity interface{}, fieldName string) (int, error) {
+	fieldType, _ := reflect.TypeOf(entity).FieldByName(fieldName)
+	var fieldSize int
+	var err error
+	value, found := fieldType.Tag.Lookup(`gorm`)
+	if found {
+		tmp := strings.Split(value, "size:")
+		if len(tmp) > 0 {
+			fieldSize, err = strconv.Atoi(tmp[1])
+		}
+	}
+	return fieldSize, err
+}

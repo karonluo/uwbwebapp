@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"strings"
 	"uwbwebapp/pkg/biz"
 	"uwbwebapp/pkg/dao"
@@ -117,6 +118,28 @@ func WSUpdateSite(ctx iris.Context) {
 		tools.ProcessError("services.WSUpdateSite", `site, err = site.UnmarshalSite(body)`, err)
 		message.Message = err.Error()
 		message.StatusCode = 500
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
+
+// 设置场地用户集
+func WSSetSiteUsers(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+	var siteUsers []entities.SiteUser
+	body, _ := ctx.GetBody()
+	err := json.Unmarshal(body, &siteUsers)
+	if err != nil {
+		message.Message = err.Error()
+		message.StatusCode = 500
+	} else {
+		err = biz.SetSiteUsers(siteUsers)
+		if err == nil {
+			message.Message = true
+		} else {
+			message.Message = err
+			message.StatusCode = 500
+		}
 	}
 	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)

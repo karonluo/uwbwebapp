@@ -150,6 +150,9 @@ func RegisterSiteServices(app *iris.Application) {
 	app.Options("/site/query", Cors)
 	app.Get("/site/query", services.WSQuerySites) // 查询场地信息
 
+	app.Options("/site/setusers", Cors)
+	app.Put("/site/setusers", services.WSSetSiteUsers) // 设置场地用户集合
+
 }
 func RegisterServices(app *iris.Application) {
 

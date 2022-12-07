@@ -109,3 +109,7 @@ func UpdateSite(site *entities.Site) error {
 	result := Database.Table("sites").Where("id=?", site.Id).UpdateColumns(site)
 	return result.Error
 }
+
+func SetSiteUserNames(siteId string, userNames string) error {
+	return Database.Table("sites").Where("id=?", siteId).UpdateColumn("users", userNames).Error
+}
