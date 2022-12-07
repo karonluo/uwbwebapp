@@ -1,0 +1,14 @@
+swimmer_id
+sports_company_id
+uwb_tag_code
+vip_level_dict_code
+vip_level
+member_code
+membership_datetime
+withdrawa_datetime
+create_datetime
+modify_datetime
+creator
+modifier
+sports_company_name
+swimmer_display_name
