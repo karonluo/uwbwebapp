@@ -4,7 +4,7 @@ import (
 	"uwbwebapp/pkg/entities"
 )
 
-func CreateSysFuncPage(sysFuncPage entities.SysFuncPage) error {
+func CreateSysFuncPage(sysFuncPage *entities.SysFuncPage) error {
 	result := Database.Create(&sysFuncPage)
 	return result.Error
 }

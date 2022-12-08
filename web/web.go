@@ -178,4 +178,7 @@ func RegisterServices(app *iris.Application) {
 	app.Options("/dict/children", Cors)
 	app.Get("/dict/children", services.WSGetChildrenSystemDictsByParent)
 
+	app.Options("/sysfuncpage", Cors)
+	app.Post("/sysfuncpage", services.WSCreateSysFuncPage) // 创建系统功能页面
+
 }
