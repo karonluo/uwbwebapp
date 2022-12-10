@@ -9,13 +9,13 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func WSEnumSportsCompanySwimmersBySwimmerId(ctx iris.Context) {
+func WSEnumSportsCompanySitesBySiteId(ctx iris.Context) {
 	message := WebServiceMessage{Message: true, StatusCode: 200}
-	result, err := biz.EnumSportsCompanySwimmersBySwimmerId(ctx.FormValue("swimmer_id"))
+	result, err := biz.EnumSportsCompanySitesBySiteId(ctx.FormValue("site_id"))
 	if err != nil {
 		message.Message = err.Error()
 		message.StatusCode = 500
-		tools.ProcessError("services.WSEnumSportsCompanySwimmersBySwimmerId", `result, err := biz.EnumSportsCompanySwimmersBySwimmerId(ctx.FormValue("swimmer_id"))`, err)
+		tools.ProcessError("services.EnumSportsCompanySitesBySiteId", `result, err := biz.EnumSportsCompanySitesBySiteId(ctx.FormValue("site_id"))`, err)
 	} else {
 		message.Message = result
 
@@ -24,22 +24,22 @@ func WSEnumSportsCompanySwimmersBySwimmerId(ctx iris.Context) {
 	ctx.JSON(message)
 }
 
-func WSSwimmerJoinInSportsCompanies(ctx iris.Context) {
+func WSSiteJoinInSportsCompanines(ctx iris.Context) {
 	message := WebServiceMessage{Message: true, StatusCode: 200}
-	var css []entities.CompanySwimmer
+	var css []entities.CompanySite
 	var errs []error
 	body, _ := ctx.GetBody()
 	err := json.Unmarshal(body, &css)
 	if err != nil {
 		message.Message = err.Error()
 		message.StatusCode = 500
-		tools.ProcessError("services.WSSwimmerJoinInSportsCompanies", `err := json.Unmarshal(body, &css)`, err)
+		tools.ProcessError("services.WSSiteJoinInSportsCompanines", `err := json.Unmarshal(body, &css)`, err)
 	} else {
-		css, errs = biz.SwimmerJoinInSportsCompanies(css, ctx.FormValue("swimmer_id"))
+		css, errs = biz.SiteJoinInSportsCompanies(css, ctx.FormValue("site_id"))
 		if len(errs) > 0 {
 			result := make(map[string]interface{})
-			result["CompanySwimmers"] = css
-			result["errors"] = errs
+			result["CompanySites"] = css // 返回成功加入的公司
+			result["errors"] = errs      // 返回错误加入的公司
 			message.Message = result
 
 		} else {

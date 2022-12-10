@@ -18,9 +18,7 @@ func WSDeleteSwimmers(ctx iris.Context) {
 		if err != nil {
 			message.Message = err.Error()
 			message.StatusCode = 500
-			tools.ProcessError(`services.WSDeleteSiwmmers`,
-				`err := biz.DeleteSwimmers(swimmerIds)`,
-				err)
+			tools.ProcessError(`services.WSDeleteSiwmmers`, `err := biz.DeleteSwimmers(swimmerIds)`, err)
 		}
 	}
 	ctx.StatusCode(message.StatusCode)
@@ -36,12 +34,14 @@ func WSCreateSwimmer(ctx iris.Context) {
 	if err != nil {
 		message.StatusCode = 500
 		message.Message = err.Error()
+		tools.ProcessError(`services.WSCreateSwimmer`, `err := json.Unmarshal(bytesSwimmer, &swimmer)`, err)
 
 	} else {
 		id, err := biz.CreateSwimmer(swimmer)
 		if err != nil {
 			message.StatusCode = 500
 			message.Message = err.Error()
+			tools.ProcessError(`services.WSCreateSwimmer`, `id, err := biz.CreateSwimmer(swimmer)`, err)
 		} else {
 			message.Message = id
 		}
@@ -91,6 +91,7 @@ func WSGetSwimmersById(ctx iris.Context) {
 	if err != nil {
 		message.Message = err.Error()
 		message.StatusCode = 500
+		tools.ProcessError(`services.WSGetSwimmersById`, `swimmer, err := biz.GetSwimmersById(ctx.FormValue("id"))`, err)
 	} else {
 		message.Message = swimmer
 	}

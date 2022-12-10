@@ -109,76 +109,54 @@ func RegisterSysUserServices(app *iris.Application) {
 // 绑定体育公司相关WEB服务
 func RegisterSportsCompanyServices(app *iris.Application) {
 
-	app.Options("/company", Cors)
 	app.Post("/company", services.WSCreateSportsCompany)   //创建体育运动公司
 	app.Delete("/company", services.WSDeleteSportsCompany) // 删除体育运动公司
 
-	app.Options("/companies", Cors)
 	app.Delete("/companies", services.WSDeleteSportsCompanies) // 批量删除体育运动公司
 
 	app.Put("/company", services.WSUpdateSportsCompany)  // 更新修改体育运动公司
 	app.Get("/company", services.WSGetSportsCompanyById) // 获取体育公司相信信息
 
-	app.Options("/company/query", Cors)
 	app.Get("/company/query", services.WSQueryCompanies) // 查询公司列表
 
-	app.Options("/company/relsites", Cors)
 	app.Put("/company/relsites", services.WSRelSportsCompanyAndSites) // 为体育公司管关联场地
 }
 
 // 绑定游泳者相关WEB服务
 func RegisterSwimmerServices(app *iris.Application) {
-	app.Options("/swimmer", Cors)
-	app.Post("/swimmer", services.WSCreateSwimmer)    // 创建游泳者信息
-	app.Get("/swimmer", services.WSGetSwimmersById)   // 获取游泳者信息
-	app.Delete("/swimmer", services.WSDeleteSwimmers) // 批量删除游泳者信息
-	app.Put("/swimmer", services.WSUpdateSwimmer)     // 修改游泳者（会员）信息
-
-	app.Options("/swimmer/query", Cors)
-	app.Get("/swimmer/query", services.WSQuerySwimmers) // 查询游泳者信息
+	app.Post("/swimmer", services.WSCreateSwimmer)                            // 创建游泳者信息
+	app.Get("/swimmer", services.WSGetSwimmersById)                           // 获取游泳者信息
+	app.Delete("/swimmer", services.WSDeleteSwimmers)                         // 批量删除游泳者信息
+	app.Put("/swimmer", services.WSUpdateSwimmer)                             // 修改游泳者（会员）信息
+	app.Get("/swimmer/query", services.WSQuerySwimmers)                       // 查询游泳者信息
+	app.Put("/swimmer/setcompanies", services.WSSwimmerJoinInSportsCompanies) // 将游泳者加入公司
 
 }
 
 // 绑定场地相关WEB服务
 func RegisterSiteServices(app *iris.Application) {
-	app.Options("/site", Cors)
-	app.Post("/site", services.WSCreateSite)    // 创建查询场地信息
-	app.Get("/site", services.WSGetSiteById)    // 获取查询场地信息
-	app.Delete("/site", services.WSDeleteSites) // 批量删除场地信息
-	app.Put("/site", services.WSUpdateSite)     // 修改场地信息
-
-	app.Options("/site/query", Cors)
-	app.Get("/site/query", services.WSQuerySites) // 查询场地信息
-
-	app.Options("/site/setusers", Cors)
-	app.Put("/site/setusers", services.WSSetSiteUsers) // 设置场地用户集合
+	app.Post("/site", services.WSCreateSite)                                  // 创建查询场地信息
+	app.Get("/site", services.WSGetSiteById)                                  // 获取查询场地信息
+	app.Delete("/site", services.WSDeleteSites)                               // 批量删除场地信息
+	app.Put("/site", services.WSUpdateSite)                                   // 修改场地信息
+	app.Get("/site/query", services.WSQuerySites)                             // 查询场地信息
+	app.Put("/site/setusers", services.WSSetSiteUsers)                        // 设置场地用户集合
+	app.Put("/site/setcompanies", services.WSSiteJoinInSportsCompanines)      // 将场地加入公司
+	app.Get("/site/enumcompanies", services.WSEnumSportsCompanySitesBySiteId) // 通过场地编号获取其所属公司集合。
 
 }
 func RegisterServices(app *iris.Application) {
-
 	app.Get("/", Index)
 	RegisterSysUserServices(app)
 	RegisterSportsCompanyServices(app)
 	RegisterSwimmerServices(app)
 	RegisterSiteServices(app)
-
-	// app.Options("/siteowners/list", Cors)
 	// app.Get("/siteowners/list", services.WSEnumSiteOwners) //列举场地负责人
 	// app.Put("/siteowners/setowners", services.WSSetSiteOwners) //设置场地负责人
-
-	app.Options("/athorizationinfo", Cors)
 	app.Get("/athorizationinfo", services.WSGetLoginInformation) //获取登录信息
-
-	app.Post("/role", services.WSCreateSysRole)               // 创建系统角色
-	app.Get("/sysfuncpage/list", services.WSEnumSysFuncPages) //列举所有系统功能页面
-
-	app.Options("/dict", Cors)
-	app.Get("/dict", services.WSGetDictValues) // 获取字典值
-
-	app.Options("/dict/children", Cors)
+	app.Post("/role", services.WSCreateSysRole)                  // 创建系统角色
+	app.Get("/sysfuncpage/list", services.WSEnumSysFuncPages)    //列举所有系统功能页面
+	app.Get("/dict", services.WSGetDictValues)                   // 获取字典值
 	app.Get("/dict/children", services.WSGetChildrenSystemDictsByParent)
-
-	app.Options("/sysfuncpage", Cors)
 	app.Post("/sysfuncpage", services.WSCreateSysFuncPage) // 创建系统功能页面
-
 }

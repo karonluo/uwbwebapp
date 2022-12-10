@@ -113,3 +113,8 @@ func UpdateSite(site *entities.Site) error {
 func SetSiteUserNames(siteId string, userNames string) error {
 	return Database.Table("sites").Where("id=?", siteId).UpdateColumn("users", userNames).Error
 }
+
+func ClearAllCompaniesFromSite(siteId string) error {
+	return Database.Exec("DELETE FROM company_sites WHERE site_id = ?", siteId).Error
+
+}

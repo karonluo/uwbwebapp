@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"uwbwebapp/pkg/entities"
 
 	"gorm.io/gorm"
@@ -96,4 +97,20 @@ func QuerySwimmers(queryCodition entities.QueryCondition) ([]entities.Swimmer, e
 func UpdateSwimmer(swimmer entities.Swimmer) error {
 	result := Database.Table("swimmers").Where("id=?", swimmer.Id).UpdateColumns(&swimmer)
 	return result.Error
+}
+
+func ClearAllCompaniesFromSwimmer(swimmerId string) error {
+	return Database.Exec("DELETE FROM company_swimmers WHERE swimmer_id = ?", swimmerId).Error
+
+}
+
+// 当游泳者姓名变更时需要变更所有涉及的数据表
+func UpdateSwimmerDisplayNameRelTable(swimmerId string, swimmerDisplayName string) error {
+
+	err := Database.Table("company_swimmers").Where("swimmer_id=?", swimmerId).UpdateColumn("swimmer_display_name", swimmerDisplayName).Error
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err
+
 }

@@ -51,6 +51,9 @@ func main() {
 			return r
 		}).ToSlice(&paths)
 	conf.WebConfiguration.UrlPathList = paths // 所有注册的服务接口地址。
+	for _, path := range paths {
+		app.Options(path, web.Cors)
+	}
 	app.Run(iris.Addr(conf.WebConfiguration.Port), iris.WithCharset("UTF-8"))
 
 }

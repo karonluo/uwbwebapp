@@ -5,6 +5,7 @@ import (
 	"time"
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/entities"
+	"uwbwebapp/pkg/tools"
 
 	"github.com/google/uuid"
 )
@@ -55,4 +56,53 @@ func UpdateSite(site *entities.Site) error {
 		err = dao.UpdateSite(site)
 	}
 	return err
+}
+
+// 返回
+// 本次新加入的公司
+// 错误信息集合
+func SiteJoinInSportsCompanies(css []entities.CompanySite, siteId string) ([]entities.CompanySite, []error) {
+	var err error
+	var errs []error
+	// var originJoined []entities.CompanySwimmer
+	var newJoined []entities.CompanySite
+
+	err = dao.ClearAllCompaniesFromSite(siteId)
+	if err == nil {
+		for _, cs := range css {
+			// TODO: 需要优化
+
+			/*
+				_, dataRecordCount, err = dao.GetCompanySwimmerByCompanyIDAndSwimmerID(cs.SportsCompanyID, cs.SwimmerID)
+				if dataRecordCount == 1 {
+					originJoined = append(originJoined, cs)
+				} else {
+					err = dao.CreateCompanySwimmer(&cs)
+					if err == nil {
+						newJoined = append(newJoined, cs)
+					} else {
+						errs = append(errs, err)
+					}
+				}
+			*/
+			// 目前的方式，需要前端进行优先判断，只加入曾经未加入的公司。
+			cs.CreateDatetime = time.Now()
+			cs.ModifyDatetime = cs.CreateDatetime
+			if cs.Creator == "" {
+				cs.Creator = "admin"
+			}
+			cs.Modifier = cs.Creator
+			err = dao.CreateCompanySite(&cs)
+			if err == nil {
+				newJoined = append(newJoined, cs)
+			} else {
+				errs = append(errs, err)
+				tools.ProcessError("biz.SiteJoinInSportsCompanies", `err = dao.CreateCompanySite(&cs)`, err)
+
+			}
+		}
+	} else {
+		tools.ProcessError("biz.SiteJoinInSportsCompanies", `err = dao.ClearAllCompaniesFromSite(siteId)`, err)
+	}
+	return newJoined, errs
 }
