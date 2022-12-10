@@ -29,9 +29,11 @@ type SysFuncPage struct {
 	ID             string    `json:"Id"`          // 菜单功能唯一编号
 	Modifier       string    `json:"Modifier"`
 	ModifyDatetime time.Time `json:"ModifyDatetime"`
-	ParentID       string    `json:"ParentId"`   // 上级编号
-	URLAddress     string    `json:"UrlAddress"` // 调用URL地址
-	URLMethod      string    `json:"UrlMethod"`  // 调用URL地址方法
+	ParentID       string    `json:"ParentId"`                       // 上级编号
+	URLAddress     string    `json:"UrlAddress"`                     // 调用URL地址
+	URLMethod      string    `json:"UrlMethod"`                      // 调用URL地址方法
+	URLType        string    `gorm:"column:url_type" json:"URLType"` // 地址类型
+	OrderKey       int       `json:"OrderKey"`                       // 排序键
 }
 
 func (SysFuncPage) TableName() string {

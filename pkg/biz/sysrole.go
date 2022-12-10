@@ -9,11 +9,7 @@ import (
 )
 
 func CreateSysRole(sysrole entities.SysRole) (string, error) {
-
-	if sysrole.Id == "" {
-		sysrole.Id = uuid.New().String()
-	}
-
+	sysrole.Id = uuid.New().String()
 	if sysrole.Creator == "" {
 		sysrole.Creator = "admin"
 	}

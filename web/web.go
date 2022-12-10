@@ -91,18 +91,16 @@ func Cors(ctx iris.Context) {
 
 // 绑定用户相关WEB服务
 func RegisterSysUserServices(app *iris.Application) {
-	app.Options("/sysuser", Cors)
+
 	app.Post("/sysuser", services.WSCreateUser)                 //新增系统用户
 	app.Delete("/sysuser", services.WSDeleteSysUser)            //删除系统用户
 	app.Put("/sysuser", services.WSUpdateSysUser)               // 修改系统用户
 	app.Get("/sysuser", services.WSGetSysUserFromDBByLoginName) //获取系统用户信息(通过登录名)
 
-	app.Options("/login", Cors)
 	app.Post("/login", services.WSLoginSystem)                                             //登录系统
 	app.Get("/sysuser/listall", services.WSEnumSysUsers)                                   //列举系统用户
 	app.Get("/sysuser/listall/fromcompanies", services.WSEnumSysUsersFromSportsCompanyIds) // 通过体育公司唯一编号集合获取所有下属系统用户
 
-	app.Options("/sysuser/query", Cors)
 	app.Get("/sysuser/query", services.WSQuerySysUsers) // 查询系统用户列表
 }
 

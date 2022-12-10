@@ -33,6 +33,9 @@ func WSCreateSysFuncPage(ctx iris.Context) {
 			id, err = biz.CreateSysFuncPage(&page)
 			if err == nil {
 				message.Message = id
+			} else {
+				message.Message = err.Error()
+				message.StatusCode = 500
 			}
 		}
 	}
