@@ -128,6 +128,9 @@ func RegisterSwimmerServices(app *iris.Application) {
 	app.Put("/swimmer", services.WSUpdateSwimmer)                             // 修改游泳者（会员）信息
 	app.Get("/swimmer/query", services.WSQuerySwimmers)                       // 查询游泳者信息
 	app.Put("/swimmer/setcompanies", services.WSSwimmerJoinInSportsCompanies) // 将游泳者加入公司
+	app.Put("/swimmer/setviplevel", services.WSSetSwimmerVIPLevel)            // 设置游泳者会员等级
+	app.Put("/swimmer/companyswimmer", services.WSUpdateCompanySwimmer)       // 修改公司会员信息
+	app.Get("/swimmer/companyswimmer", services.WSGetCompanySwimmer)          // 修改公司会员信息
 
 }
 

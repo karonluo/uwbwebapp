@@ -128,3 +128,22 @@ func SetSwimmerEnterToSite(swimmerId string, siteId string, enterTime time.Time)
 func SetSwimmerExitestFromSite(swimmerId string, siteId string, enterTime time.Time) {
 
 }
+
+func SetSwimmerVIPLevel(swimmerId string, companyId string, vipLevelDictCode string, vipLevel string, modifier string) error {
+	var err error
+	var swimmerCompany entities.CompanySwimmer
+	var recordCount int64
+	swimmerCompany, recordCount, err = dao.GetCompanySwimmerByCompanyIDAndSwimmerID(companyId, swimmerId)
+	if recordCount == 1 && err == nil {
+		swimmerCompany.VIPLevelDictCode = vipLevelDictCode
+		swimmerCompany.VIPLevel = vipLevel
+		swimmerCompany.ModifyDatetime = time.Now()
+		if modifier != "" {
+			swimmerCompany.Modifier = modifier
+		} else {
+			swimmerCompany.Modifier = "admin"
+		}
+		err = dao.UpdateCompanySwimmer(&swimmerCompany)
+	}
+	return err
+}
