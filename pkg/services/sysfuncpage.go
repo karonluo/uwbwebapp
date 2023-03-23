@@ -15,6 +15,17 @@ func WSEnumSysFuncPages(ctx iris.Context) {
 	ctx.JSON(message)
 
 }
+func WSDeleteSysFuncPage(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+	id := ctx.FormValue("id")
+	err := biz.DeleteSysFuncPage(id)
+	if err != nil {
+		message.Message = err.Error()
+		message.StatusCode = 500
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
 
 func WSCreateSysFuncPage(ctx iris.Context) {
 	message := WebServiceMessage{Message: true, StatusCode: 200}

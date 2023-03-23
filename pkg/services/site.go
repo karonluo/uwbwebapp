@@ -70,7 +70,7 @@ func WSQuerySites(ctx iris.Context) {
 		if query_err != nil {
 			message.Message = query_err.Error()
 			message.StatusCode = 500
-			tools.ProcessError(`services.WSQuerySites`, `sites, pageCount, recordCount, query_err = biz.QuerySwimmers(queryCondition)`, query_err)
+			tools.ProcessError(`services.WSQuerySites`, `sites, pageCount, recordCount, query_err = biz.QuerySites(queryCondition)`, query_err)
 		} else {
 			result["page_count"] = pageCount
 			result["record_count"] = recordCount
@@ -133,7 +133,7 @@ func WSSetSiteUsers(ctx iris.Context) {
 		message.Message = err.Error()
 		message.StatusCode = 500
 	} else {
-		err = biz.SetSiteUsers(siteUsers)
+		err = biz.SetSiteUsers(ctx.FormValue("site_id"), siteUsers)
 		if err == nil {
 			message.Message = true
 		} else {

@@ -23,4 +23,5 @@ type SysRole struct {
 	DisplayName    string    `json:"DisplayName"`
 	Modifier       string    `json:"Modifier"`
 	ModifyDatetime time.Time `json:"ModifyDatetime"`
+	Description    string    `json:"Description"`
 }

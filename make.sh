@@ -1,10 +1,13 @@
 #!/bin/bash
-cd ../*go
+cd ~/*go
+cp -R ~/gitee/uwbwebapp/web/* ./web/
 ./kill.sh
-cd ../uwbwebapp
-go build -o ../uwbwebapp_go/cmd/main main.go
-cd ../*go
+cd ~/gitee/uwbwebapp
+go build -o ~/uwbwebapp_go/cmd/main ./main.go
+go build -o ~/uwbwebapp_go/cmd/logger_client ./pkg/tools/logger_client/loggerclient.go
+go build -o ./cmd/logger_client ./pkg/tools/logger_client/loggerclient.go
+cd ~/*go
 ./run.sh
-cd ../uwbwebapp
+cd ~/gitee/uwbwebapp
 # cp conf/WebConfig.json ../uwbwebapp_go/conf
 

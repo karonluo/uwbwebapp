@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/entities"
-	"uwbwebapp/pkg/tools"
 
 	"gorm.io/gorm"
 )
@@ -38,12 +38,11 @@ func GetUserFromRedisByLoginName(login_name string) (entities.SysUser, bool) {
 	var sysuser entities.SysUser
 	var result bool = true
 	ctx := context.Background()
-	res := RedisDatabase.Get(ctx, "sysuser_"+login_name)
+	res := cache.RedisDatabase.Get(ctx, "sysuser_"+login_name)
 	if res != nil {
 		err := json.Unmarshal([]byte(res.Val()), &sysuser)
 		if err != nil {
 			result = false
-			tools.ProcessError(`dao.GetUserFromRedisByLoginName`, `json.Unmarshal([]byte(res.Val()), &sysuser)`, err, `pkg/dao/sysuser.go`)
 
 		}
 	} else {
@@ -55,7 +54,8 @@ func GetUserFromRedisByLoginName(login_name string) (entities.SysUser, bool) {
 func GetUserFromDBByLoginName(login_name string) (entities.SysUser, bool, error) {
 	var result entities.SysUser
 	var bres bool = false
-	res := Database.Where(("login_name=?"), login_name).Find(&result)
+	res := Database.Where(("login_name=?"), login_name).First(&result)
+
 	if res.RowsAffected == 1 {
 		bres = true
 	}
@@ -97,6 +97,7 @@ func GetSysUserCount(queryCodition entities.QueryCondition, companyID string) (i
 	var count int64
 	var user entities.SysUser
 	var result *gorm.DB
+
 	if queryCodition.LikeValue != "" {
 		if companyID != "" {
 			result = Database.Model(&user).Where(
@@ -146,29 +147,29 @@ func GetSysUserCount(queryCodition entities.QueryCondition, companyID string) (i
 	return count, result.Error
 }
 
-func QuerySysUsers(queryCodition entities.QueryCondition, companyID string) ([]entities.SysUser, error) {
+func QuerySysUsers(queryCondition entities.QueryCondition, companyID string) ([]entities.SysUser, error) {
 	var user entities.SysUser
 	var users []entities.SysUser
 	var result *gorm.DB
 	selectFields := `id, sports_company_name, id_card_number, login_name, display_name, cellphone,email, wechat, qq, Modifier, Creator, modify_datetime, create_datetime`
-	if queryCodition.LikeValue != "" {
+	if queryCondition.LikeValue != "" {
 		if companyID != "" {
 			result = Database.Model(&user).Select(selectFields).Where(
 				`(login_name LIKE ? OR display_name LIKE ? OR cellphone LIKE ? OR email LIKE ? OR wechat LIKE ? OR
 			id_card_number LIKE ? OR
 			sports_company_name LIKE ? OR
 			qq LIKE ?) AND sports_company_id = ?`,
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%", companyID).
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%", companyID).
 				Order("modify_datetime DESC").
-				Limit(int(queryCodition.PageSize)).
-				Offset(int(queryCodition.PageSize * (queryCodition.PageIndex - 1))).
+				Limit(int(queryCondition.PageSize)).
+				Offset(int(queryCondition.PageSize * (queryCondition.PageIndex - 1))).
 				Find(&users)
 		} else {
 			result = Database.Model(&user).Select(selectFields).Where(
@@ -176,17 +177,17 @@ func QuerySysUsers(queryCodition entities.QueryCondition, companyID string) ([]e
 			id_card_number LIKE ? OR
 			sports_company_name LIKE ? OR
 			qq LIKE ?`,
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%",
-				"%"+queryCodition.LikeValue+"%").
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%",
+				"%"+queryCondition.LikeValue+"%").
 				Order("modify_datetime DESC").
-				Limit(int(queryCodition.PageSize)).
-				Offset(int(queryCodition.PageSize * (queryCodition.PageIndex - 1))).
+				Limit(int(queryCondition.PageSize)).
+				Offset(int(queryCondition.PageSize * (queryCondition.PageIndex - 1))).
 				Find(&users)
 		}
 
@@ -195,18 +196,19 @@ func QuerySysUsers(queryCodition entities.QueryCondition, companyID string) ([]e
 			result = Database.Model(&user).
 				Select(selectFields).
 				Order("modify_datetime DESC").
-				Limit(int(queryCodition.PageSize)).
-				Offset(int(queryCodition.PageSize * (queryCodition.PageIndex - 1))).
+				Limit(int(queryCondition.PageSize)).
+				Offset(int(queryCondition.PageSize * (queryCondition.PageIndex - 1))).
 				Find(&users)
 		} else {
 			result = Database.Model(&user).
 				Select(selectFields).Where("sports_company_id=?", companyID).
 				Order("modify_datetime DESC").
-				Limit(int(queryCodition.PageSize)).
-				Offset(int(queryCodition.PageSize * (queryCodition.PageIndex - 1))).
+				Limit(int(queryCondition.PageSize)).
+				Offset(int(queryCondition.PageSize * (queryCondition.PageIndex - 1))).
 				Find(&users)
 		}
 	}
+
 	return users, result.Error
 }
 
@@ -217,7 +219,7 @@ func GetSysUserFromDBById(sysUserId string) (entities.SysUser, error) {
 
 }
 func UpdateSysUserPassword(sysUserId string, newPassword string) error {
-	result := Database.Table("sys_users").Where("id=?", sysUserId).UpdateColumn("passwd_md5", tools.SHA1(newPassword))
+	result := Database.Table("sys_users").Where("id=?", sysUserId).UpdateColumn("passwd_md5", newPassword)
 	return result.Error
 }
 func UpdateSysUser(user entities.SysUser) error {
@@ -225,10 +227,10 @@ func UpdateSysUser(user entities.SysUser) error {
 	return result.Error
 }
 
-func UpdateSysUserCompanyName(company *entities.SportsCompany) error {
+func UpdateSysUserCompanyName(coId string, coName string) error {
 	result := Database.Table("sys_users").
-		Where("sports_company_id=?", company.Id).
-		UpdateColumn("sports_company_name", company.Name)
+		Where("sports_company_id=?", coId).
+		UpdateColumn("sports_company_name", coName)
 
 	return result.Error
 }

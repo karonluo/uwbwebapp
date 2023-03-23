@@ -1,0 +1,5647 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "UWB 定位系统 - 泳池定位项目",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "场地人员相关接口"
+    },
+    {
+      "name": "系统用户相关接口"
+    },
+    {
+      "name": "游泳者相关接口"
+    },
+    {
+      "name": "体育公司相关接口"
+    },
+    {
+      "name": "系统管理相关接口"
+    },
+    {
+      "name": "系统管理相关接口/权限角色相关接口"
+    },
+    {
+      "name": "系统管理相关接口/字典相关接口"
+    },
+    {
+      "name": "系统管理相关接口/公司管理组相关接口"
+    },
+    {
+      "name": "系统管理相关接口/系统日志相关接口"
+    },
+    {
+      "name": "场地信息相关接口"
+    },
+    {
+      "name": "UWB设备管理相关接口"
+    },
+    {
+      "name": "UWB设备管理相关接口/UWB 标签相关接口"
+    },
+    {
+      "name": "训练日历相关接口"
+    }
+  ],
+  "paths": {
+    "/sysuser/listall": {
+      "get": {
+        "summary": "列举系统用户",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-48211717-run"
+      }
+    },
+    "/sysuser": {
+      "post": {
+        "summary": "新增系统用户",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "`SportsCompanyID` 和 `SportsCompanyName` 由 前端 填写，后端不会进行干预。\n`ModifyDatetime` 和 `CreateDatetime` 无论前端填写什么内容，后端都会干预。\n`Creator` 和 `Modifier` 若前端未填写，则后端会默认使用 `admin` 作为数据修改/新增者。\n",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SysUser"
+              },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-48223918-run"
+      },
+      "get": {
+        "summary": "通过登录名获取用户信息",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "login_name",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "StatusCode": {
+                      "type": "integer"
+                    },
+                    "Message": {
+                      "type": "object",
+                      "properties": {
+                        "Id": {
+                          "type": "string"
+                        },
+                        "LoginName": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Cellphone": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Wechat": {
+                          "type": "string"
+                        },
+                        "QQ": {
+                          "type": "string"
+                        },
+                        "IsSiteOwner": {
+                          "type": "boolean"
+                        },
+                        "IsDisableLogin": {
+                          "type": "boolean"
+                        },
+                        "CreateDatetime": {
+                          "type": "string"
+                        },
+                        "ModifyDatetime": {
+                          "type": "string"
+                        },
+                        "Creator": {
+                          "type": "string"
+                        },
+                        "Modifier": {
+                          "type": "string"
+                        },
+                        "PasswdMD5": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Id",
+                        "LoginName",
+                        "DisplayName",
+                        "Cellphone",
+                        "Email",
+                        "Wechat",
+                        "QQ",
+                        "IsSiteOwner",
+                        "IsDisableLogin",
+                        "CreateDatetime",
+                        "ModifyDatetime",
+                        "Creator",
+                        "Modifier",
+                        "PasswdMD5"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "Id",
+                        "LoginName",
+                        "DisplayName",
+                        "Cellphone",
+                        "Email",
+                        "Wechat",
+                        "QQ",
+                        "IsSiteOwner",
+                        "IsDisableLogin",
+                        "CreateDatetime",
+                        "ModifyDatetime",
+                        "Creator",
+                        "Modifier",
+                        "PasswdMD5"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "StatusCode",
+                    "Message"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "StatusCode",
+                    "Message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-48227968-run"
+      },
+      "delete": {
+        "summary": "删除系统用户",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49052334-run"
+      },
+      "put": {
+        "summary": "修改系统用户(非密码字段)",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "`SportsCompanyID` 和 `SportsCompanyName` 由 前端 填写，后端不会进行干预。\n`ModifyDatetime` 和 `CreateDatetime` 无论前端填写什么内容，后端都会干预。\n`Creator` 和 `Modifier` 若前端未填写，则后端会默认使用 `admin` 作为数据修改/新增者。\n",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "x-apifox-overrides": {},
+                "type": "object",
+                "x-apifox-refs": {
+                  "01GJZRT6ETYQH8WNCVE1J4KBA1": {
+                    "$ref": "#/components/schemas/SysUser"
+                  }
+                },
+                "x-apifox-orders": [
+                  "01GJZRT6ETYQH8WNCVE1J4KBA1"
+                ],
+                "properties": {
+                  "Id": {
+                    "type": "string"
+                  },
+                  "LoginName": {
+                    "type": "string"
+                  },
+                  "DisplayName": {
+                    "type": "string"
+                  },
+                  "Cellphone": {
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string"
+                  },
+                  "Wechat": {
+                    "type": "string"
+                  },
+                  "QQ": {
+                    "type": "string"
+                  },
+                  "IsDisableLogin": {
+                    "type": "boolean"
+                  },
+                  "CreateDatetime": {
+                    "type": "null"
+                  },
+                  "ModifyDatetime": {
+                    "type": "null"
+                  },
+                  "Creator": {
+                    "type": "string"
+                  },
+                  "Modifier": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "PasswdMD5": {
+                    "type": "string"
+                  },
+                  "SportsCompanyId": {
+                    "type": "string",
+                    "maxLength": 36,
+                    "format": "uuid",
+                    "title": "体育公司唯一编号"
+                  },
+                  "SportsCompanyName": {
+                    "type": "string",
+                    "maxLength": 36,
+                    "title": "体育公司名称"
+                  },
+                  "IDCardNumber": {
+                    "type": "string",
+                    "maxLength": 18,
+                    "pattern": "[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]",
+                    "title": "身份证号码"
+                  }
+                },
+                "required": [
+                  "Id",
+                  "LoginName",
+                  "DisplayName",
+                  "Cellphone",
+                  "Email",
+                  "Wechat",
+                  "QQ",
+                  "IsDisableLogin",
+                  "Modifier",
+                  "SportsCompanyId",
+                  "SportsCompanyName",
+                  "IDCardNumber"
+                ],
+                "x-apifox-ignore-properties": [
+                  "Id",
+                  "LoginName",
+                  "DisplayName",
+                  "Cellphone",
+                  "Email",
+                  "Wechat",
+                  "QQ",
+                  "IsDisableLogin",
+                  "CreateDatetime",
+                  "ModifyDatetime",
+                  "Creator",
+                  "Modifier",
+                  "PasswdMD5",
+                  "SportsCompanyId",
+                  "SportsCompanyName",
+                  "IDCardNumber"
+                ]
+              },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-51883211-run"
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "系统用户登录",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "",
+                "type": "object",
+                "properties": {
+                  "login_name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": [
+                  "login_name",
+                  "password",
+                  "code"
+                ],
+                "required": [
+                  "login_name",
+                  "password",
+                  "code"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-48247332-run"
+      }
+    },
+    "/athorizationinfo": {
+      "get": {
+        "summary": "获取登录信息",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "description": "支持 acl,login_name,token,sysuser,display_name 的获取",
+            "required": true,
+            "example": "acl",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "90bb3fc6aab0fd170675515d6226ea1af6358c4e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-48287964-run"
+      }
+    },
+    "/swimmer": {
+      "post": {
+        "summary": "创建游泳者",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Swimmer",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "Cf978fbB-4e5f-B5c0-e72F-11e0d78D2475",
+                "Gender": "女",
+                "Age": 32,
+                "MemberCode": "73",
+                "Address": "山东省中山市平顺县",
+                "Cellphone": "19814848896",
+                "Wechat": "incididunt officia Excepteur",
+                "Description": "作速再该政成接片统使那组图容。议从美第目来华形处十社命。行支至据结入位类花界果车府取。",
+                "Creator": "sunt",
+                "Modifier": "irure",
+                "DisplayName": "况议律观",
+                "VIPLevel": "cillum exercitation esse velit",
+                "VIPLevelDictCode": "0011",
+                "ModifyDatetime": null,
+                "WithdrawaDatetime": null,
+                "MembershipDatetime": null,
+                "CreateDatetime": null
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49230204-run"
+      },
+      "get": {
+        "summary": "获取游泳者信息",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52310131-run"
+      },
+      "delete": {
+        "summary": "批量删除游泳者信息",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "每个游泳者的ID以逗号分割，也可以单个删除。",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52377984-run"
+      },
+      "put": {
+        "summary": "修改游泳者信息",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Swimmer",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "e3545f6b-9106-07c9-2deb-1ab088323dcc",
+                "Name": "修改公司测试",
+                "Address": "海南省甘孜藏族自治州湖里区",
+                "TelephoneList": "19878277742",
+                "Description": "为所比位知才最正精适示期号。治却次参又象千给化老即平存低眼车以。员工千再局图火收值别织只定科会青果。看属者维十持物见写周美基长图共。",
+                "CreateDatetime": null,
+                "ModifyDatetime": null,
+                "Creator": "dolore exercitation",
+                "Modifier": "quis eiusmod tempor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52690646-run"
+      }
+    },
+    "/company": {
+      "post": {
+        "summary": "创建体育公司",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsCompany",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "",
+                "Name": "真但约",
+                "Address": "天津石嘴山市周村区",
+                "TelephoneList": "18663075677",
+                "Description": "无周外世拉院己连上律设什则。红同验因接美提存什维到别示已离积任。受手商什资北种各花格即海期候维习式复。",
+                "CreateDatetime": null,
+                "ModifyDatetime": null,
+                "Creator": "esse",
+                "Modifier": "in sed anim magna cillum"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49263092-run"
+      },
+      "delete": {
+        "summary": "删除体育公司",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49270966-run"
+      },
+      "put": {
+        "summary": "修改体育公司信息",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsCompany",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "e3545f6b-9106-07c9-2deb-1ab088323dcc",
+                "Name": "修改公司测试",
+                "Address": "海南省甘孜藏族自治州湖里区",
+                "TelephoneList": "19878277742",
+                "Description": "为所比位知才最正精适示期号。治却次参又象千给化老即平存低眼车以。员工千再局图火收值别织只定科会青果。看属者维十持物见写周美基长图共。",
+                "CreateDatetime": null,
+                "ModifyDatetime": null,
+                "Creator": "dolore exercitation",
+                "Modifier": "quis eiusmod tempor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49284360-run"
+      },
+      "get": {
+        "summary": "获取体育公司信息",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "8e9dd758-2112-4fcd-9510-6c40f0993ba3",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "6184a66077c5b736ca176ed02036373c665e480e",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49289719-run"
+      }
+    },
+    "/role": {
+      "post": {
+        "summary": "新增角色",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "`ID` 创建时会被后端功能干预，因此可以填写空字符串。\n`ModifyDateTime` 和 `CreateDateTime` 后台会进行干预。\n`Creator` 和 `Modifier` 前端不填写的话，后端会自动填写为 \"admin\"",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SysRole",
+                "x-apifox-overrides": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49518126-run"
+      },
+      "get": {
+        "summary": "获取系统角色信息",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "role_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55991085-run"
+      },
+      "put": {
+        "summary": "修改角色信息",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SysRole",
+                "x-apifox-overrides": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55992143-run"
+      }
+    },
+    "/sysfuncpage/list": {
+      "get": {
+        "summary": "获取页面及功能列表",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SysFuncPage1",
+                  "x-apifox-overrides": {}
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-49541498-run"
+      }
+    },
+    "/company/query": {
+      "get": {
+        "summary": "查询体育公司信息",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "98",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-51500562-run"
+      }
+    },
+    "/companies": {
+      "delete": {
+        "summary": "批量删除体育公司",
+        "x-apifox-folder": "体育公司相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "体育公司相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-51861479-run"
+      }
+    },
+    "/sysusers": {
+      "delete": {
+        "summary": "批量删除系统用户",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-51880821-run"
+      }
+    },
+    "/sysuser/query": {
+      "get": {
+        "summary": "查询系统用户信息",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "98",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_id",
+            "in": "query",
+            "description": "当为空时查询所有公司下属系统用户，否则仅查询指定公司",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-51882890-run"
+      }
+    },
+    "/dict": {
+      "get": {
+        "summary": "获取字典",
+        "x-apifox-folder": "系统管理相关接口/字典相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/字典相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52108727-run"
+      }
+    },
+    "/swimmer/query": {
+      "get": {
+        "summary": "查询游泳者",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "每页数据量",
+            "required": false,
+            "example": "10",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "从1开始的页码",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "查询关键字",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52303747-run"
+      }
+    },
+    "/site": {
+      "post": {
+        "summary": "创建场地信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/site",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "13DAA976-62f3-BB57-DA3d-Fd0125F2345F",
+                "Address": "山西省大庆市宜君县",
+                "Contact": "eu proident aliquip enim commodo",
+                "CreateDatetime": "2015-09-12 04:13:01",
+                "ModifyDatetime": "1984-04-05 20:11:45",
+                "Creator": "in",
+                "Modifier": "nostrud aute dolore ipsum in",
+                "Users": "eiusmod deserunt exercitation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52429990-run"
+      },
+      "get": {
+        "summary": "获取场地信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52438794-run"
+      },
+      "delete": {
+        "summary": "批量删除场地信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52500510-run"
+      },
+      "put": {
+        "summary": "修改场地信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/site",
+                "x-apifox-overrides": {}
+              },
+              "example": {
+                "Id": "13DAA976-62f3-BB57-DA3d-Fd0125F2345F",
+                "Address": "山西省大庆市宜君县",
+                "Contact": "eu proident aliquip enim commodo",
+                "CreateDatetime": "2015-09-12 04:13:01",
+                "ModifyDatetime": "1984-04-05 20:11:45",
+                "Creator": "in",
+                "Modifier": "nostrud aute dolore ipsum in",
+                "Users": "eiusmod deserunt exercitation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52504429-run"
+      }
+    },
+    "/site/query": {
+      "get": {
+        "summary": "查询场地信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "98",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52494983-run"
+      }
+    },
+    "/dict/children": {
+      "get": {
+        "summary": "获取字典子集",
+        "x-apifox-folder": "系统管理相关接口/字典相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/字典相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52835303-run"
+      }
+    },
+    "/sysuser/listall/fromcompanies": {
+      "get": {
+        "summary": "通过体育公司唯一编号集合获取所有下属系统用户",
+        "x-apifox-folder": "系统用户相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统用户相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "company_ids",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-52848857-run"
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "测试上传文件的接口",
+        "x-apifox-folder": "",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-53123652-run"
+      }
+    },
+    "/site/setusers": {
+      "put": {
+        "summary": "设置场地用户集合",
+        "x-apifox-folder": "场地人员相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地人员相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteUser",
+                "x-apifox-overrides": {}
+              },
+              "example": [
+                {
+                  "SiteId": "2814eb9a-3c1d-4f72-8f63-d4ab95e7c811",
+                  "SysUserId": "527603e2-c3e6-43ce-91aa-681875df8574",
+                  "SysUserDisplayname": "凯龙",
+                  "SiteDisplayName": "成都运动体育中心游泳馆",
+                  "JobTitleDictCode": "教练",
+                  "JobTitle": "1001",
+                  "CreateDatetime": null,
+                  "ModifyDatetime": null,
+                  "Creator": "admin",
+                  "Modifier": "admin"
+                },
+                {
+                  "SiteId": "2814eb9a-3c1d-4f72-8f63-d4ab95e7c811",
+                  "SysUserId": "e681bc18-5c18-855d-88b3-896344ef4012",
+                  "SysUserDisplayname": "石宇宁",
+                  "SiteDisplayName": "成都运动体育中心游泳馆",
+                  "JobTitleDictCode": "教练",
+                  "JobTitle": "1001",
+                  "CreateDatetime": null,
+                  "ModifyDatetime": null,
+                  "Creator": "admin",
+                  "Modifier": "admin"
+                }
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-53297707-run"
+      }
+    },
+    "/sysfuncpage": {
+      "post": {
+        "summary": "创建系统功能页面",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "`ID` 创建时会被后端功能干预，因此可以填写空字符串。\n`ModifyDateTime` 和 `CreateDateTime` 后台会进行干预。\n`Creator` 和 `Modifier` 前端不填写的话，后端会自动填写为 \"admin\"\n`UrlAddress` 和 `UrlMethod` 不能有相同的地址和方法\n`UrlType` 只能是 `INTERFACE` (接口) `VIEW` (视图界面)",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SysFuncPage",
+                "x-apifox-overrides": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-53865598-run"
+      }
+    },
+    "/site/setcompanies": {
+      "put": {
+        "summary": "将场地加入多个公司",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanySites"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54151360-run"
+      }
+    },
+    "/site/enumcompanies": {
+      "get": {
+        "summary": "通过场地编号获取所属公司",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54153403-run"
+      }
+    },
+    "/swimmer/setcompanies": {
+      "put": {
+        "summary": "将游泳者加入多个公司",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "swimmer_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanySwimmers"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54157033-run"
+      }
+    },
+    "/swimmer/setviplevel": {
+      "put": {
+        "summary": "设置游泳者会员等级",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "swimmer_id",
+            "in": "query",
+            "description": "游泳者唯一编号",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_id",
+            "in": "query",
+            "description": "公司唯一编号",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vip_level",
+            "in": "query",
+            "description": "会员等级名称",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vip_level_dict_code",
+            "in": "query",
+            "description": "会员等级字典编码",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modifier",
+            "in": "query",
+            "description": "设置人",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54173999-run"
+      }
+    },
+    "/swimmer/companyswimmer": {
+      "put": {
+        "summary": "修改公司会员信息",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanySwimmer",
+                "x-apifox-overrides": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54174048-run"
+      },
+      "get": {
+        "summary": "通过游泳者编号和公司编号获取其会员信息",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "company_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "swimmer_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54174059-run"
+      }
+    },
+    "/comgtgroup": {
+      "post": {
+        "summary": "创建公司管理组",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsCompanyMgtGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54207150-run"
+      },
+      "delete": {
+        "summary": "删除公司管理组",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55961242-run"
+      },
+      "put": {
+        "summary": "更新体育公司管理组信息",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportsCompanyMgtGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55962840-run"
+      }
+    },
+    "/company/mgtgroup": {
+      "get": {
+        "summary": "通过公司管理组获取其下所有公司",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54207269-run"
+      }
+    },
+    "/comgtgroup/joincompanies": {
+      "put": {
+        "summary": "将公司加入到管理组",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "cmg_id",
+            "in": "query",
+            "description": "公司管理组唯一编号",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "co_ids",
+            "in": "query",
+            "description": "公司唯一编号合集,用逗号分割。",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54243677-run"
+      }
+    },
+    "/systemlog/operationlog": {
+      "post": {
+        "summary": "创建操作日志",
+        "x-apifox-folder": "系统管理相关接口/系统日志相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/系统日志相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemLog"
+              },
+              "example": {
+                "Message": "测试创建操作日志",
+                "LogType": "operate",
+                "FunctionName": "/systemlog/operationlog",
+                "ModuleName": "services",
+                "UserName": "邹磊",
+                "UserDisplayName": "派工县住识解收",
+                "Source": "browser",
+                "Datetime": null,
+                "Id": "c6b3ce5B-Cd1e-d8eF-2248-3687f0FbFbBf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54375309-run"
+      }
+    },
+    "/uwbtag": {
+      "post": {
+        "summary": "创建新的UWB标签",
+        "x-apifox-folder": "UWB设备管理相关接口/UWB 标签相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "UWB设备管理相关接口/UWB 标签相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UWBTag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54914200-run"
+      },
+      "get": {
+        "summary": "获取UWB标签信息",
+        "x-apifox-folder": "UWB设备管理相关接口/UWB 标签相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "UWB设备管理相关接口/UWB 标签相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "777",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-54927548-run"
+      }
+    },
+    "/uwbtag/query": {
+      "get": {
+        "summary": "查询UWB标签信息",
+        "x-apifox-folder": "UWB设备管理相关接口/UWB 标签相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "UWB设备管理相关接口/UWB 标签相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_ids",
+            "in": "query",
+            "description": "公司唯一编号用逗号分割，不填写任何内容时为所有。",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isbound",
+            "in": "query",
+            "description": "true/false 是否绑定了用户，不填写任何内容时，为所有。",
+            "required": false,
+            "example": "false",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55376832-run"
+      }
+    },
+    "/comgtgroup/query": {
+      "get": {
+        "summary": "查询公司管理组",
+        "x-apifox-folder": "系统管理相关接口/公司管理组相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/公司管理组相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55662687-run"
+      }
+    },
+    "/role/joinfuncpage": {
+      "put": {
+        "summary": "绑定角色和功能页面",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_ids",
+            "in": "query",
+            "description": "功能页面唯一编号集合，以逗号分割",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role_id",
+            "in": "query",
+            "description": "角色唯一编号",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55948338-run"
+      }
+    },
+    "/role/funcpages": {
+      "get": {
+        "summary": "根据角色查询其下所有功能页面",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "role_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55953075-run"
+      }
+    },
+    "/swimmer/enumcompanies": {
+      "get": {
+        "summary": "通过游泳者编号获取其所属公司关系集合",
+        "x-apifox-folder": "游泳者相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "游泳者相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "swimmer_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55986691-run"
+      }
+    },
+    "/site/enumusers": {
+      "get": {
+        "summary": "通过场地编号获取所有场地用户",
+        "x-apifox-folder": "场地人员相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地人员相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55988687-run"
+      }
+    },
+    "/role/query": {
+      "get": {
+        "summary": "查询角色信息",
+        "x-apifox-folder": "系统管理相关接口/权限角色相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "系统管理相关接口/权限角色相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_index",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "like_value",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-55991416-run"
+      }
+    },
+    "/calendar/swimmersite/enter": {
+      "put": {
+        "summary": "游泳者入场登记",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "仅前台人员操作，若不告知任何入场日期时间，则按照当日当时登记。\n注意，一旦指定了入场日期时间，后台将会从当前指定的日期时间找相关游泳者场地日程信息，只有指定的日期时间在数据库为空或者无数据时才能签入，否则将报告错误，此证明所指定的日期时间已经有入场数据了。\n指定入场日期时间（补登）\n不指定入场日期时间（当日当时）",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwimmerCalendar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          },
+          "x-200:多信息响应格式": {
+            "description": "多信息响应格式",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "StatusCode": {
+                      "type": "integer"
+                    },
+                    "Message": {
+                      "type": "object",
+                      "properties": {
+                        "errs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "ids": {
+                          "type": "null"
+                        }
+                      },
+                      "required": [
+                        "errs",
+                        "ids"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "errs",
+                        "ids"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "StatusCode",
+                    "Message"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "StatusCode",
+                    "Message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-56011095-run"
+      }
+    },
+    "/calendar/datescope": {
+      "get": {
+        "summary": "根据日期范围和场地编号获取其所有游泳者的日程",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "根据日期范围和场地编号获取其所有游泳者的日程, 包括计划日程的和入场日程",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bdate",
+            "in": "query",
+            "description": "yyyy-MM-dd, 无需时间，后台会自动生成整日时间段。",
+            "required": true,
+            "example": "2000-01-01",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "edate",
+            "in": "query",
+            "description": "yyyy-MM-dd, 无需时间，后台会自动生成整日时间段。",
+            "required": true,
+            "example": "2099-12-31",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-56809010-run"
+      }
+    },
+    "/calendar/swimmersite/exit": {
+      "put": {
+        "summary": "游泳者退场签出",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "testing",
+        "deprecated": false,
+        "description": "仅前台人员操作，若不告知任何退场日期时间，则按照当日当时登记退场。\n注意，一旦指定了退场日期时间，后台将会从当前指定的日期时间找相关游泳者场地日程信息，只有指定的日期时间在数据库有入场数据时才能签出，否则将报告错误，此证明所指定的日期时间没有入场数据。\n指定退场日期时间（补登）\n不指定退场日期时间（当日当时）",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwimmerCalendar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-56811595-run"
+      }
+    },
+    "/calendar/swimmersite/plancycle": {
+      "put": {
+        "summary": "游泳者训练计划制定(未实现)",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "由教练进行计划安排",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "cycle",
+            "in": "query",
+            "description": "0 代表单次计划 1 代表周期",
+            "required": true,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "weekday",
+            "in": "query",
+            "description": "0,1,2,3,4,5,6 (逗号分割，0代表周日，6代表周六）,只有当选择周期时猜有效。",
+            "required": false,
+            "example": "0,6",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bdate",
+            "in": "query",
+            "description": "计划开始日期 无论单次还是周期型，都需要输入日期。",
+            "required": false,
+            "example": "2023-01-20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "edate",
+            "in": "query",
+            "description": "计划结束日期 只有当选择周期时猜有效。",
+            "required": false,
+            "example": "2023-12-30",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "btime",
+            "in": "query",
+            "description": "开始训练时间",
+            "required": false,
+            "example": "10:00:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "etime",
+            "in": "query",
+            "description": "结束训练时间",
+            "required": false,
+            "example": "12:00:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "训练场地唯一编号",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "description": "游泳者编号（会员编号）"
+                    },
+                    "DisplayName": {
+                      "type": "string",
+                      "description": "游泳者显示名"
+                    }
+                  },
+                  "x-apifox-refs": {},
+                  "x-apifox-orders": [
+                    "Id",
+                    "DisplayName"
+                  ],
+                  "required": [
+                    "Id",
+                    "DisplayName"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "description": "游泳者集合"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-56811718-run"
+      }
+    },
+    "/calendar/report": {
+      "get": {
+        "summary": "生成训练报告(未实现)",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-56975765-run"
+      }
+    },
+    "/site/enumsites": {
+      "get": {
+        "summary": "枚举指定用户所有场地信息",
+        "x-apifox-folder": "场地人员相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地人员相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "sysuser_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "d2f3de8b-b091-434f-b66f-62c9ec0eab48",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteUser",
+                  "x-apifox-overrides": {}
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-57638619-run"
+      }
+    },
+    "/calendar/swimmersite/cancleplaycycle": {
+      "put": {
+        "summary": "取消游泳者训练计划",
+        "x-apifox-folder": "训练日历相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "只允许教练进行处理",
+        "tags": [
+          "训练日历相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "日历编号以逗号分割",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-58007384-run"
+      }
+    },
+    "/uploadsitemap": {
+      "post": {
+        "summary": "上传场地平面图",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-59407306-run"
+      }
+    },
+    "/site/envcalendar": {
+      "post": {
+        "summary": "创建场地环境日历",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteEnvCalendar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-59429349-run"
+      },
+      "put": {
+        "summary": "更新场地环境日历",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteEnvCalendar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-59513338-run"
+      }
+    },
+    "/sites/enumenvcalendars": {
+      "get": {
+        "summary": "枚举日期段的场地环境信息",
+        "x-apifox-folder": "场地信息相关接口",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "场地信息相关接口"
+        ],
+        "parameters": [
+          {
+            "name": "bdate",
+            "in": "query",
+            "description": "开始日期, yyyy-MM-dd",
+            "required": true,
+            "example": "2023-01-27",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "edate",
+            "in": "query",
+            "description": "结束日期 yyyy-MM-dd",
+            "required": true,
+            "example": "2023-01-30",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "in": "query",
+            "description": "场地唯一编号",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "test",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox'": "https://www.apifox.cn/web/project/1888020/apis/api-59448235-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SiteEnvCalendar": {
+        "type": "object",
+        "properties": {
+          "SiteId": {
+            "type": "string",
+            "description": "场地唯一编号"
+          },
+          "Date": {
+            "type": "string",
+            "description": "日期"
+          },
+          "Temp": {
+            "type": "number",
+            "description": "温度"
+          },
+          "Humidity": {
+            "type": "number",
+            "description": "湿度"
+          },
+          "Ph": {
+            "type": "number",
+            "description": "酸碱度"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string"
+          },
+          "Modifier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "SiteId",
+          "Date",
+          "Temp",
+          "Humidity",
+          "Ph",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "SiteId",
+          "Date",
+          "Temp",
+          "Humidity",
+          "Ph",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "title": "场地环境日历",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SwimmerCalendar": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "SiteId": {
+            "type": "string",
+            "nullable": true
+          },
+          "TrainingBeginDatetime": {
+            "type": "null",
+            "description": "训练开始日期时间，由教练指定"
+          },
+          "TrainingEndDatetime": {
+            "type": "null",
+            "description": "训练结束日期时间，由教练指定(注意不能超过开始日期）"
+          },
+          "SwimmerId": {
+            "type": "string",
+            "description": "游泳者唯一编号",
+            "nullable": true
+          },
+          "TotalMileage": {
+            "type": "integer",
+            "title": "",
+            "description": "总里程，当前台人员登记出场时即时计算本次游泳总里程",
+            "nullable": true
+          },
+          "EnterDatetime": {
+            "type": "null",
+            "description": "进入场地的日期时间，由前台人员登记"
+          },
+          "ExitDateTime": {
+            "type": "null",
+            "description": "退出场地的日期时间，由前台人员登记"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "null"
+          },
+          "Modifier": {
+            "type": "null"
+          },
+          "SwimmerDisplayName": {
+            "type": "string",
+            "description": "游泳者名称"
+          },
+          "IsCycle": {
+            "type": "boolean",
+            "description": "是否为周期性的训练计划"
+          }
+        },
+        "required": [
+          "SiteId",
+          "SwimmerId",
+          "TotalMileage",
+          "EnterDatetime",
+          "ExitDateTime",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Id",
+          "SwimmerDisplayName",
+          "IsCycle"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "SiteId",
+          "TrainingBeginDatetime",
+          "TrainingEndDatetime",
+          "SwimmerId",
+          "TotalMileage",
+          "EnterDatetime",
+          "ExitDateTime",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "SwimmerDisplayName",
+          "IsCycle"
+        ],
+        "title": "训练日程",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "UWBTag": {
+        "type": "object",
+        "properties": {
+          "Code": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "需要手工填写的唯一编码"
+          },
+          "SportsCompanyId": {
+            "type": "string",
+            "description": "体育公司唯一编码"
+          },
+          "Description": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "描述信息128个字符"
+          },
+          "CreateDatetime": {
+            "type": "null",
+            "description": "后端干预前端不用填写"
+          },
+          "ModifyDatetime": {
+            "type": "null",
+            "description": "后端干预前端不用填写"
+          },
+          "Creator": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "description": "前端填写"
+          },
+          "Modifier": {
+            "type": "string",
+            "description": "前端填写",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          },
+          "SportsCompanyName": {
+            "type": "string",
+            "description": "所属公司名称，前端必填"
+          },
+          "IsBound": {
+            "type": "boolean",
+            "description": "是否已经绑定到了会员，新增和修改不允许修改该项，属于业务逻辑，只能进行查看或过滤",
+            "default": false
+          }
+        },
+        "required": [
+          "Code",
+          "SportsCompanyId",
+          "Description",
+          "Creator",
+          "Modifier",
+          "SportsCompanyName",
+          "IsBound"
+        ],
+        "x-apifox-orders": [
+          "Code",
+          "SportsCompanyId",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "SportsCompanyName",
+          "IsBound"
+        ],
+        "title": "UWB标签",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "TestGenObjectDataModel": {
+        "type": "object",
+        "properties": {
+          "Books": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Name": {
+                  "type": "string"
+                },
+                "PageSize": {
+                  "type": "integer"
+                },
+                "Authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Name": {
+                        "type": "string"
+                      },
+                      "Birthday": {
+                        "type": "string"
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "Name",
+                      "Birthday"
+                    ],
+                    "x-apifox-ignore-properties": []
+                  }
+                }
+              },
+              "x-apifox-orders": [
+                "Name",
+                "PageSize",
+                "Authors"
+              ],
+              "x-apifox-ignore-properties": []
+            }
+          },
+          "StatusCode": {
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "ID": {
+            "type": "string"
+          },
+          "PublishDatetime": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Name",
+          "ID",
+          "Books",
+          "PublishDatetime",
+          "StatusCode",
+          "Message"
+        ],
+        "x-apifox-orders": [
+          "Books",
+          "StatusCode",
+          "Message",
+          "Name",
+          "ID",
+          "PublishDatetime"
+        ],
+        "title": "测试通过JSON生成复杂对象数据模型",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SystemLog": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "description": "后端会干预，前端不用填写",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "title": "消息",
+            "description": "必填"
+          },
+          "LogType": {
+            "type": "string",
+            "enum": [
+              "operate",
+              "error",
+              "info",
+              "warn",
+              "debug"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "operate": "操作日志",
+                "error": "错误日志",
+                "info": "信息日志",
+                "warn": "告警日志",
+                "debug": "调试日志"
+              }
+            },
+            "default": "operate",
+            "examples": [
+              "operate"
+            ],
+            "title": "日志类型",
+            "description": "前端调用默认 operate，可以不用填写"
+          },
+          "FunctionName": {
+            "type": "string",
+            "title": "功能名称",
+            "description": "使用的功能名称，前端填写接口地址后缀"
+          },
+          "ModuleName": {
+            "type": "string",
+            "title": "模块名称",
+            "description": "使用的模块名称，前端填写模块级别的菜单名称"
+          },
+          "UserName": {
+            "type": "string",
+            "title": "操作用户登录名",
+            "description": "必填，当前操作用户"
+          },
+          "UserDisplayName": {
+            "type": "string",
+            "description": "必填，当前操作用户的显示名",
+            "title": "操作用户显示名"
+          },
+          "Source": {
+            "type": "string",
+            "title": "",
+            "description": "必填，前端填写 browser",
+            "default": "browser",
+            "examples": [
+              "browser"
+            ],
+            "enum": [
+              "broswer",
+              "api",
+              "server",
+              "grpc"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "broswer": "",
+                "api": "",
+                "server": "",
+                "grpc": ""
+              }
+            }
+          },
+          "Datetime": {
+            "type": "null",
+            "description": "后端会干预，前端不用填写"
+          },
+          "CodeRowContent": {
+            "type": "string",
+            "title": "产生日志的代码行内容",
+            "description": "产生日志的代码行内容,前后端均可填写，建议后端填写",
+            "nullable": true
+          }
+        },
+        "required": [
+          "Message",
+          "LogType",
+          "FunctionName",
+          "ModuleName",
+          "UserName",
+          "UserDisplayName",
+          "Source",
+          "Datetime",
+          "CodeRowContent"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "Message",
+          "LogType",
+          "FunctionName",
+          "ModuleName",
+          "UserName",
+          "UserDisplayName",
+          "Source",
+          "Datetime",
+          "CodeRowContent"
+        ],
+        "title": "系统日志",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SportsCompanyMgtGroup": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "title": "体育公司管理组唯一编号",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "title": "名称"
+          },
+          "Description": {
+            "type": "string",
+            "maxLength": 128,
+            "title": "描述"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            }
+          },
+          "Modifier": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            },
+            "title": ""
+          },
+          "IsBound": {
+            "type": "boolean",
+            "title": "是否已经绑定公司",
+            "description": "单纯修改该字段无效，目前有业务进行控制。",
+            "nullable": true
+          }
+        },
+        "required": [
+          "Id",
+          "Name",
+          "Description",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "Name",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "IsBound"
+        ],
+        "title": "体育公司管理组",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "CompanySites": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "SiteId": {
+              "type": "string"
+            },
+            "SiteDisplayName": {
+              "type": "string"
+            },
+            "SportsCompanyId": {
+              "type": "string"
+            },
+            "SportsCompanyName": {
+              "type": "string"
+            },
+            "CreateDatetime": {
+              "type": "null"
+            },
+            "ModifyDatetime": {
+              "type": "null"
+            },
+            "Creator": {
+              "type": "string"
+            },
+            "Modifier": {
+              "type": "string"
+            }
+          },
+          "x-apifox-orders": [
+            "SiteId",
+            "SiteDisplayName",
+            "SportsCompanyId",
+            "SportsCompanyName",
+            "CreateDatetime",
+            "ModifyDatetime",
+            "Creator",
+            "Modifier"
+          ],
+          "x-apifox-ignore-properties": []
+        },
+        "title": "体育公司场地集合",
+        "x-apifox-folder": ""
+      },
+      "CompanySite": {
+        "type": "object",
+        "properties": {
+          "SiteId": {
+            "type": "string",
+            "title": "场地唯一编号"
+          },
+          "SiteDisplayName": {
+            "type": "string",
+            "maxLength": 128,
+            "title": "场地显示名"
+          },
+          "SportsCompanyId": {
+            "type": "string",
+            "title": "体育公司唯一编号"
+          },
+          "SportsCompanyName": {
+            "type": "string",
+            "maxLength": 128,
+            "title": "体育公司名称"
+          },
+          "CreateDatetime": {
+            "type": "null",
+            "title": "数据创建日期",
+            "description": "前端JSON赋值null"
+          },
+          "ModifyDatetime": {
+            "type": "null",
+            "title": "数据修改日期",
+            "description": "前端JSON赋值null"
+          },
+          "Creator": {
+            "type": "string",
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            },
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "title": "数据创建者"
+          },
+          "Modifier": {
+            "type": "string",
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            },
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "title": "数据修改者"
+          }
+        },
+        "required": [
+          "SiteId",
+          "SiteDisplayName",
+          "SportsCompanyId",
+          "SportsCompanyName",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "SiteId",
+          "SiteDisplayName",
+          "SportsCompanyId",
+          "SportsCompanyName",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "title": "体育公司场地",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SysFuncPage": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "title": "菜单功能唯一编号"
+          },
+          "UrlAddress": {
+            "type": "string",
+            "title": "调用URL地址"
+          },
+          "UrlMethod": {
+            "type": "string",
+            "examples": [
+              "GET"
+            ],
+            "default": "GET",
+            "enum": [
+              "GET",
+              "POST",
+              "DELETE",
+              "OPTIONS"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "GET": "",
+                "POST": "",
+                "DELETE": "",
+                "OPTIONS": ""
+              }
+            },
+            "title": "调用URL地址方法"
+          },
+          "DisplayName": {
+            "type": "string",
+            "title": "菜单或功能显示名"
+          },
+          "ParentId": {
+            "type": "string",
+            "title": "上级编号",
+            "default": "top",
+            "examples": [
+              "top"
+            ]
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string",
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            },
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          },
+          "Modifier": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "enum": [
+              "admin"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "admin": ""
+              }
+            }
+          },
+          "UrlType": {
+            "type": "string",
+            "enum": [
+              "INTERFACE",
+              "VIEW"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "INTERFACE": "",
+                "VIEW": ""
+              }
+            },
+            "examples": [
+              "INTERFACE"
+            ],
+            "default": "INTERFACE"
+          },
+          "OderKey": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Id",
+          "UrlAddress",
+          "UrlMethod",
+          "DisplayName",
+          "ParentId",
+          "Creator",
+          "Modifier",
+          "UrlType",
+          "OderKey"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "UrlAddress",
+          "UrlMethod",
+          "DisplayName",
+          "ParentId",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "UrlType",
+          "OderKey"
+        ],
+        "title": "系统功能页面",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "CompanySwimmers": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CompanySwimmer",
+          "x-apifox-overrides": {}
+        },
+        "title": "公司会员集合",
+        "x-apifox-folder": ""
+      },
+      "CompanySwimmer": {
+        "type": "object",
+        "properties": {
+          "SwimmerId": {
+            "type": "string",
+            "title": "游泳者(会员)唯一编码"
+          },
+          "SportsCompanyId": {
+            "type": "string",
+            "title": "体育公司唯一编码"
+          },
+          "UWBTagCode": {
+            "type": "string",
+            "title": "UWB标签编码"
+          },
+          "VIPLevelDictCode": {
+            "type": "string",
+            "title": "会员等级字典编码"
+          },
+          "VIPLevel": {
+            "type": "string",
+            "title": "会员等级字典值"
+          },
+          "MemberCode": {
+            "type": "string",
+            "title": "会员编号"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string"
+          },
+          "Modifier": {
+            "type": "string"
+          },
+          "MembershipDatetime": {
+            "type": "null",
+            "title": "入会日期"
+          },
+          "WithdrawaDatetime": {
+            "type": "null",
+            "title": "退会日期"
+          },
+          "SwimmerDisplayName": {
+            "type": "string",
+            "title": "游泳者显示名"
+          },
+          "SportsCompanyName": {
+            "type": "string",
+            "title": "体育公司名称"
+          }
+        },
+        "required": [
+          "SwimmerId",
+          "SportsCompanyId",
+          "UWBTagCode",
+          "VIPLevelDictCode",
+          "VIPLevel",
+          "MemberCode",
+          "Creator",
+          "Modifier",
+          "SwimmerDisplayName",
+          "SportsCompanyName"
+        ],
+        "x-apifox-orders": [
+          "SwimmerId",
+          "SportsCompanyId",
+          "UWBTagCode",
+          "VIPLevelDictCode",
+          "VIPLevel",
+          "MemberCode",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "MembershipDatetime",
+          "WithdrawaDatetime",
+          "SwimmerDisplayName",
+          "SportsCompanyName"
+        ],
+        "title": "公司会员",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SiteUsers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "SiteId": {
+              "type": "string"
+            },
+            "SysUserId": {
+              "type": "string"
+            },
+            "SysUserDisplayname": {
+              "type": "string"
+            },
+            "SiteDisplayName": {
+              "type": "string"
+            },
+            "JobTitleDictCode": {
+              "type": "string"
+            },
+            "JobTitle": {
+              "type": "string"
+            },
+            "CreateDatetime": {
+              "type": "null"
+            },
+            "ModifyDatetime": {
+              "type": "null"
+            },
+            "Creator": {
+              "type": "string"
+            },
+            "Modifier": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "SiteId",
+            "SysUserId",
+            "SysUserDisplayname",
+            "SiteDisplayName",
+            "JobTitleDictCode",
+            "JobTitle",
+            "CreateDatetime",
+            "ModifyDatetime",
+            "Creator",
+            "Modifier"
+          ],
+          "x-apifox-orders": [
+            "SiteId",
+            "SysUserId",
+            "SysUserDisplayname",
+            "SiteDisplayName",
+            "JobTitleDictCode",
+            "JobTitle",
+            "CreateDatetime",
+            "ModifyDatetime",
+            "Creator",
+            "Modifier"
+          ],
+          "x-apifox-ignore-properties": []
+        },
+        "title": "场地人员信息集合",
+        "x-apifox-folder": ""
+      },
+      "site": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "title": "唯一编号",
+            "format": "uuid",
+            "default": ""
+          },
+          "Address": {
+            "type": "string",
+            "title": "场地地址",
+            "maxLength": 128
+          },
+          "Contact": {
+            "type": "string",
+            "title": "场地联系方式i",
+            "description": "填写手机或电话，以逗号分割",
+            "maxLength": 128
+          },
+          "Users": {
+            "type": "null",
+            "title": "场地人员显示名",
+            "description": "在绑定系统用户时自动填写，用户不能在界面上编辑文字的方式修改"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string",
+            "title": "",
+            "default": "admin",
+            "maxLength": 16,
+            "examples": [
+              "admin"
+            ]
+          },
+          "Modifier": {
+            "type": "string",
+            "title": "",
+            "maxLength": 16,
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          },
+          "DisplayName": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "GPS": {
+            "type": "string",
+            "default": "104.072909,30.578308",
+            "examples": [
+              "104.072909,30.578308"
+            ]
+          }
+        },
+        "title": "游泳场地信息",
+        "x-apifox-orders": [
+          "Id",
+          "Address",
+          "Contact",
+          "Users",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "DisplayName",
+          "GPS"
+        ],
+        "required": [
+          "Id",
+          "Address",
+          "Contact",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Users",
+          "DisplayName",
+          "GPS"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "Swimmer": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "Gender": {
+            "type": "string",
+            "enum": [
+              "男",
+              "女"
+            ],
+            "x-apifox": {
+              "enumDescriptions": {
+                "男": "",
+                "女": ""
+              }
+            },
+            "default": "男",
+            "examples": [
+              "女"
+            ]
+          },
+          "Age": {
+            "type": "integer"
+          },
+          "Address": {
+            "type": "string"
+          },
+          "Cellphone": {
+            "type": "string"
+          },
+          "Wechat": {
+            "type": "string"
+          },
+          "IdCardName": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          },
+          "Modifier": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          }
+        },
+        "required": [
+          "Id",
+          "DisplayName",
+          "Gender",
+          "Age",
+          "Address",
+          "Cellphone",
+          "Wechat",
+          "IdCardName",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "DisplayName",
+          "Gender",
+          "Age",
+          "Address",
+          "Cellphone",
+          "Wechat",
+          "IdCardName",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "title": "游泳者(会员)",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SiteUser": {
+        "type": "object",
+        "properties": {
+          "SiteId": {
+            "type": "string",
+            "title": "场地唯一编号"
+          },
+          "SysUserId": {
+            "type": "string",
+            "title": "系统用户唯一编号"
+          },
+          "JobTitleDictCode": {
+            "type": "string",
+            "title": "字典编码"
+          },
+          "JobTitle": {
+            "type": "string",
+            "title": "系统字典-岗位"
+          },
+          "SiteDisplayName": {
+            "type": "string",
+            "title": "场地显示名"
+          },
+          "SysUserDisplayname": {
+            "type": "string",
+            "title": "用户显示名"
+          },
+          "CreateDatetime": {
+            "type": "string",
+            "title": "数据创建日期"
+          },
+          "ModifyDatetime": {
+            "type": "string",
+            "title": "数据修改日期"
+          },
+          "Creator": {
+            "type": "string",
+            "title": "数据创建人"
+          },
+          "Modifier": {
+            "type": "string",
+            "title": "数据修改人"
+          }
+        },
+        "required": [
+          "SiteId",
+          "SysUserId",
+          "SysUserDisplayname",
+          "SiteDisplayName",
+          "JobTitleDictCode",
+          "JobTitle",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "SiteId",
+          "SysUserId",
+          "JobTitleDictCode",
+          "JobTitle",
+          "SiteDisplayName",
+          "SysUserDisplayname",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "title": "场地人员信息",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SysUser": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string"
+          },
+          "LoginName": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "Cellphone": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "Wechat": {
+            "type": "string"
+          },
+          "QQ": {
+            "type": "string"
+          },
+          "IsDisableLogin": {
+            "type": "boolean"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string"
+          },
+          "Modifier": {
+            "type": "string"
+          },
+          "PasswdMD5": {
+            "type": "string"
+          },
+          "SportsCompanyId": {
+            "type": "string",
+            "maxLength": 36,
+            "format": "uuid",
+            "title": "体育公司唯一编号"
+          },
+          "SportsCompanyName": {
+            "type": "string",
+            "maxLength": 36,
+            "title": "体育公司名称"
+          },
+          "IDCardNumber": {
+            "type": "string",
+            "maxLength": 18,
+            "pattern": "[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]",
+            "title": "身份证号码"
+          }
+        },
+        "required": [
+          "Id",
+          "LoginName",
+          "DisplayName",
+          "Cellphone",
+          "Email",
+          "Wechat",
+          "QQ",
+          "IsDisableLogin",
+          "Creator",
+          "Modifier",
+          "SportsCompanyId",
+          "SportsCompanyName",
+          "IDCardNumber"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "LoginName",
+          "DisplayName",
+          "Cellphone",
+          "Email",
+          "Wechat",
+          "QQ",
+          "IsDisableLogin",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "PasswdMD5",
+          "SportsCompanyId",
+          "SportsCompanyName",
+          "IDCardNumber"
+        ],
+        "title": "系统用户",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SysDict": {
+        "type": "object",
+        "properties": {
+          "Key": {
+            "type": "string",
+            "title": "建"
+          },
+          "ParentKey": {
+            "type": "string",
+            "title": "上级键"
+          },
+          "ParentCode": {
+            "type": "string",
+            "title": "上级编码"
+          },
+          "Value": {
+            "type": "string",
+            "title": "值"
+          },
+          "DataType": {
+            "type": "string",
+            "title": "数据类型"
+          },
+          "CreateDatetime": {
+            "type": "null",
+            "title": "数据创建日期时间"
+          },
+          "ModifyDatetime": {
+            "type": "null",
+            "title": "数据修改日期时间"
+          },
+          "Creator": {
+            "type": "string",
+            "title": "数据创建人"
+          },
+          "Modifier": {
+            "type": "string",
+            "title": "数据修改人"
+          },
+          "Code": {
+            "type": "string",
+            "title": "编码"
+          }
+        },
+        "title": "系统字典",
+        "x-apifox-orders": [
+          "Key",
+          "ParentKey",
+          "ParentCode",
+          "Value",
+          "DataType",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Code"
+        ],
+        "required": [
+          "Key",
+          "Value",
+          "DataType",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Code",
+          "ParentKey",
+          "ParentCode"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "QueryCondition": {
+        "type": "object",
+        "properties": {
+          "page_size": {
+            "type": "integer"
+          },
+          "page_index": {
+            "type": "integer"
+          },
+          "like_value": {
+            "type": "string"
+          }
+        },
+        "title": "查询条件",
+        "x-apifox-orders": [
+          "page_size",
+          "page_index",
+          "like_value"
+        ],
+        "required": [
+          "page_size",
+          "page_index",
+          "like_value"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SysFuncPage1": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "title": "唯一编号",
+            "nullable": true
+          },
+          "UrlAddress": {
+            "type": "string",
+            "title": "页面URL地址"
+          },
+          "DisplayName": {
+            "type": "string",
+            "title": "页面名称"
+          },
+          "ParentId": {
+            "type": "string",
+            "title": "上级功能或页面编号",
+            "nullable": true
+          },
+          "CreateDatetime": {
+            "type": "null",
+            "title": "数据创建日期时间"
+          },
+          "ModifyDatetime": {
+            "type": "null",
+            "title": "数据修改日期时间"
+          },
+          "Creator": {
+            "type": "string",
+            "title": "数据创建者",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ]
+          },
+          "Modifier": {
+            "type": "string",
+            "default": "admin",
+            "examples": [
+              "admin"
+            ],
+            "title": "数据修改者"
+          }
+        },
+        "title": "系统功能页面",
+        "x-apifox-orders": [
+          "Id",
+          "UrlAddress",
+          "DisplayName",
+          "ParentId",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "required": [
+          "Id",
+          "UrlAddress",
+          "DisplayName",
+          "ParentId",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SysRole": {
+        "type": "object",
+        "properties": {
+          "DisplayName": {
+            "type": "string"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string"
+          },
+          "Modifier": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string",
+            "maxLength": 128,
+            "title": "系统角色描述信息",
+            "description": "最长128个字符。"
+          }
+        },
+        "title": "系统角色",
+        "x-apifox-orders": [
+          "DisplayName",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Id",
+          "Description"
+        ],
+        "required": [
+          "DisplayName",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier",
+          "Id",
+          "Description"
+        ],
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "SportsCompany": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "default": "",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Address": {
+            "type": "string"
+          },
+          "TelephoneList": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "CreateDatetime": {
+            "type": "null"
+          },
+          "ModifyDatetime": {
+            "type": "null"
+          },
+          "Creator": {
+            "type": "string"
+          },
+          "Modifier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Id",
+          "Name",
+          "Address",
+          "TelephoneList",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "x-apifox-orders": [
+          "Id",
+          "Name",
+          "Address",
+          "TelephoneList",
+          "Description",
+          "CreateDatetime",
+          "ModifyDatetime",
+          "Creator",
+          "Modifier"
+        ],
+        "title": "体育公司",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      }
+    }
+  },
+  "servers": []
+}

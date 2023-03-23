@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"os"
 	"uwbwebapp/conf"
+	"uwbwebapp/pkg/biz"
+	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/services"
 	"uwbwebapp/web"
 
 	"github.com/ahmetb/go-linq/v3"
+
 	"github.com/kataras/iris/v12"
 )
 
@@ -24,8 +27,12 @@ func InitWebSite() {
 	fmt.Println("初始化 Web Server")
 	conf.LoadWebConfig("conf/WebConfig.json")
 	if dao.InitDatabase() {
-		if dao.InitRedisDatabase() {
-			dao.InitSysUserToRedis()
+		if cache.InitRedisDatabase() {
+			biz.InitSystemLogger()
+			biz.InitSysUserToRedis()
+			biz.InitSysFuncPageToRedis()
+			biz.InitDictToRedis()
+			web.ConnectionUWBTagMQTTServer("go_mqtt_client_subscriber") // 链接UWB MQTT 服务，并建立 Web Socket Server.
 		}
 	}
 }
@@ -37,10 +44,26 @@ func main() {
 	fmt.Printf("UWB Swimmer Safety Management Platform Powered by Karonsoft. Version: %s\r\n", conf.WebConfiguration.Version)
 	app := iris.New()
 	app.AllowMethods("GET,POST,PUT,DELETE,OPTIONS")
+	// 指定静态目录和视图模板目录
+	app.HandleDir("/", "./web")
+	app.RegisterView(iris.HTML("./web", ".html"))
 	app.Use(web.Before)
 	web.RegisterServices(app)
-	app.Options("/upload", web.Cors)
-	app.Post("/upload", services.WSUploadFile) // 测试上传文件
+
+	app.Post("/upload", services.WSUploadFile)           // 测试上传文件
+	app.Post("/uploadsitemap", services.WSUploadSiteMap) // 上传场地平台图
+
+	//Begin Web Socket
+	web.GlobalUWBWebSocket = web.NewSocket()
+	web.MQTTWebSocketHandle(app, "/msg")
+
+	web.GlobalAlertWebSocket = web.NewSocket()
+	web.AlertWebSocketHandle(app, "/alert")
+
+	go web.BoardcastToWebSocketClient()
+	go web.BoardcastToAlertWebSocketClient()
+	//End Web Socket
+
 	ros := app.GetRoutes()
 	var paths []string
 	for _, r := range ros {

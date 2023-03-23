@@ -1,0 +1,14 @@
+{
+	"Id":"",
+	"SiteId":"",
+	"TrainingBeginDatetime":"",
+	"TrainingEndDatetime":"",
+	"SwimmerId":"",
+	"TotalMileage":"",
+	"EnterDatetime":"",
+	"ExitDatetime":"",
+	"CreateDatetime":"",
+	"ModifyDatetime":"",
+	"Creator":"",
+	"Modifier":""
+}

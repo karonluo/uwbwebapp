@@ -43,10 +43,10 @@ func UpdateSportsCompany(company *entities.SportsCompany) error {
 		tmpCompany.Modifier = company.Modifier
 		tmpCompany.ModifyDatetime = time.Now()
 		if company.Name != tmpCompany.Name {
-			tmpCompany.Name = company.Name
 			// 当修改了公司名称，需要更新用户表中所有相关用户的公司名称。
-			dao.UpdateSysUserCompanyName(&tmpCompany)
-
+			dao.UpdateSysUserCompanyName(company.Id, company.Name)
+			dao.UpdateUWBTagSportsCompanyName(company.Id, company.Name)
+			dao.UpdateCompanySwimmerCompanyName(company.Id, company.Name)
 		}
 		tmpCompany.Name = company.Name
 		tmpCompany.TelephoneList = company.TelephoneList
@@ -72,4 +72,12 @@ func QueryCompanies(queryCondition entities.QueryCondition) ([]entities.SportsCo
 		companies, err = dao.QuerySportsCompanies(queryCondition)
 	}
 	return companies, int64(math.Ceil(pageCount)), dataRecordCount, err
+}
+
+func EnumSportsCompaniesByGroupId(groupId string) ([]entities.SportsCompany, error) {
+	return dao.EnumSportsCompaniesByGroupId(groupId)
+}
+
+func EnumSportsCompaniesByRightUser(userId string) ([]entities.SportsCompany, error) {
+	return dao.EnumSportsCompaniesByRightUser(userId)
 }

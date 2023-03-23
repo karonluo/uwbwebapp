@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Wifi Authorization Page
+	</title>
+	<script>
+		function authorize() {
+			location.href = "{{.loginaddress}}"
+		}
+	</script>
+</head>
+
+<body>
+	<table width="100%" height="100%">
+		<tr>
+			<td align="center">
+				<div width="300" height="300" style="border:1px dotted black">
+					AD ICON Containers
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="button" value="Connect" onclick="authorize()">
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>

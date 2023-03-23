@@ -36,6 +36,7 @@ type CompanySwimmer struct {
 	VIPLevelDictCode   string    `gorm:"column:vip_level_dict_code" json:"VIPLevelDictCode"` // 会员等级字典编码
 	WithdrawaDatetime  time.Time `json:"WithdrawaDatetime"`                                  // 退会日期
 	SwimmerDisplayName string    `json:"SwimmerDisplayName"`                                 // 游泳者显示姓名
+	SwimmerGender      string    `gorm:"-" json:"SwimmerGender"`                             // 游泳者性别
 	SportsCompanyName  string    `json:"SportsCompanyName"`                                  // 体育运动公司名称
 }
 

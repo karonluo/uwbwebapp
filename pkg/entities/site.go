@@ -22,6 +22,7 @@ type Site struct {
 	ModifyDatetime time.Time `json:"ModifyDatetime"`
 	Users          string    `gorm:"size:128" json:"Users"` // 在绑定系统用户时自动填写，用户不能在界面上编辑文字的方式修改，多个用户显示名以逗号分割。
 	DisplayName    string    `json:"DisplayName"`
+	GPS            string    `gorm:"column:gps" json:"GPS"` // 场地GPS地址 经度纬度标识法例如：103.975466,30.680291
 }
 
 // 指定表名 为 sites

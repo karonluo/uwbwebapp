@@ -17,15 +17,11 @@ func (r *Swimmer) Marshal() ([]byte, error) {
 
 // 游泳者(会员)
 type Swimmer struct {
-	Id           string `gorm:"primaryKey"`
-	UWBTagCode   string `gorm:"uwb_tag_code" json:"UWBTagCode"`
-	DisplayName  string
-	Gender       string
-	IDCardNumber string `gorm:"column:id_card_number" json:"IDCardNumber"`
-	Age          int
-	// MemberCode         string
-	// VIPLevel           string `gorm:"column:vip_level"`
-	// VIPLevelDictCode   string `gorm:"column:vip_level_dict_code"`
+	ID             string `gorm:"primaryKey"`
+	DisplayName    string
+	Gender         string
+	IDCardNumber   string `gorm:"column:id_card_number" json:"IDCardNumber"`
+	Age            int
 	Address        string
 	Cellphone      string
 	Wechat         string
@@ -34,6 +30,4 @@ type Swimmer struct {
 	ModifyDatetime time.Time
 	Creator        string
 	Modifier       string
-	// MembershipDatetime time.Time
-	// WithdrawaDatetime  time.Time
 }

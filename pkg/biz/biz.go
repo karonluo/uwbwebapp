@@ -2,10 +2,15 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 	"uwbwebapp/conf"
+	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/dao"
+	"uwbwebapp/pkg/entities"
+
+	"github.com/google/uuid"
 )
 
 func EnumSiteOwners(site_id string) []map[string]interface{} {
@@ -31,9 +36,10 @@ func SetSiteOwners(siteId string, sysUserId string, jobTitle string) error {
 
 func GetLoginInformation(authorization string, fieldName string) (string, error) {
 	rctx := context.Background()
-	result := dao.RedisDatabase.HGet(rctx, "token_"+authorization, fieldName)
+	result := cache.RedisDatabase.HGet(rctx, "token_"+authorization, fieldName)
 	err := result.Err()
 	msg := result.Val()
+
 	return msg, err
 }
 
@@ -45,14 +51,31 @@ func CheckLogin(authorization string) (bool, error) {
 		return true, nil
 	}
 	rctx := context.Background()
-	res := dao.RedisDatabase.HExists(rctx, "token_"+authorization, "token")
+	res := cache.RedisDatabase.HExists(rctx, "token_"+authorization, "token")
 	err := res.Err()
 	if err != nil {
 		result = false
 
 	} else {
 		result = res.Val()
-		dao.RedisDatabase.Expire(rctx, "token_"+authorization, time.Duration(conf.WebConfiguration.SessionExpireMinute)*time.Minute) // 重置超时时间
+		cache.RedisDatabase.Expire(rctx, "token_"+authorization, time.Duration(conf.WebConfiguration.SessionExpireMinute)*time.Minute) // 重置超时时间
 	}
 	return result, err
+}
+
+func InitSystemLogger() {
+	fmt.Print("初始化操作日志记录器")
+	log := entities.SystemLog{
+		Datetime:        time.Now(),
+		UserName:        "admin",
+		UserDisplayName: "admin",
+		LogType:         "info",
+		FunctionName:    "InitOperationLogger",
+		ModuleName:      "dao.redis",
+		Source:          "server",
+		Id:              uuid.New().String(),
+		Message:         "初始化操作日志记录器",
+	}
+	cache.WriteSystemLogToRedis(&log)
+	fmt.Println("......完成")
 }

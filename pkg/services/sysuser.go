@@ -2,7 +2,6 @@ package services
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"uwbwebapp/pkg/biz"
 	"uwbwebapp/pkg/entities"
@@ -46,6 +45,21 @@ func WSGetSysUserFromDBByLoginName(ctx iris.Context) {
 	ctx.JSON(message)
 }
 
+func WSGetSysUserByLoginName(ctx iris.Context) {
+	var message WebServiceMessage
+	message.Message = true
+	message.StatusCode = 200
+	sysuser, res := biz.GetSysUserByLoginName(ctx.FormValue("login_name"))
+	if res {
+		message.Message = sysuser
+	} else {
+		message.Message = false
+		message.StatusCode = 404
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
+
 // 列举所有系统用户
 func WSEnumSysUsers(ctx iris.Context) {
 	sysusers, _ := biz.EnumSysUserFromDB()
@@ -79,16 +93,31 @@ func WSLoginSystem(ctx iris.Context) {
 // 获取登录信息
 func WSGetLoginInformation(ctx iris.Context) {
 	var message WebServiceMessage
+	var result interface{}
 	message.Message = "OK"
 	message.StatusCode = 200
-	res, err := biz.GetLoginInformation(ctx.GetHeader("Authorization"), ctx.FormValue("field"))
+	fieldName := ctx.FormValue("field")
+	res, err := biz.GetLoginInformation(ctx.GetHeader("Authorization"), fieldName)
 	if err != nil {
 		message.Message = err.Error()
 		message.StatusCode = 500
+		tools.ProcessError(`services.WSGetLoginInformation`, `res, err := biz.GetLoginInformation(ctx.GetHeader("Authorization"), ctx.FormValue("field"))`, err, `pkg/services/sysuser.go`)
 	} else {
-		message.Message = res
+		if fieldName == "sysuser" {
+			var user entities.SysUser
+			json.Unmarshal([]byte(res), &user)
+			result = user
+		} else if fieldName == "acl" {
+			var acl interface{}
+			json.Unmarshal([]byte(res), &acl)
+			result = acl
+		} else {
+			result = res
+		}
+		message.Message = result
 		message.StatusCode = 200
 	}
+	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)
 }
 
@@ -177,7 +206,6 @@ func WSQuerySysUsers(ctx iris.Context) {
 	// err := json.Unmarshal(body, &companyQueryCondition)
 	queryCondition, err = tools.GenerateQueryConditionFromWebParameters(ctx.FormValue("page_size"), ctx.FormValue("page_index"), ctx.FormValue("like_value"))
 	companyID := ctx.FormValue("company_id")
-	fmt.Println(companyID)
 	if err != nil {
 		tools.ProcessError(`services.WSQuerySysUsers`,
 			`queryCondition, err = tools.GenerateQueryConditionFromWebParameters(ctx.FormValue("page_size"), ctx.FormValue("page_index"), ctx.FormValue("like_value"))`,

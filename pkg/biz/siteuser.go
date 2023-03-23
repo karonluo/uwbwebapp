@@ -15,14 +15,21 @@ func ClearSiteUsers(siteID string) error {
 	}
 	return err
 }
-func SetSiteUsers(siteUsers []entities.SiteUser) error {
+func EnumSiteUsersBySiteId(siteId string) ([]entities.SiteUser, error) {
+	return dao.EnumSiteUsersBySiteId(siteId)
+}
+func EnumSiteUsersByUserId(userId string) ([]entities.SiteUser, error) {
+	return dao.EnumSiteUsersByUserId(userId)
+}
+func SetSiteUsers(siteId string, siteUsers []entities.SiteUser) error {
 	var err error
 	var userNames string
+	// 清空 该场地的用户信息。
+	err = ClearSiteUsers(siteId)
 	if len(siteUsers) > 0 {
-		siteId := siteUsers[0].SiteID
+
 		// 业务上不允许在场地信息管理中同时更新不同的场地的场地用户集合，因此只允许第一个出现的场地。
-		// 清空 该场地的用户信息。
-		err = ClearSiteUsers(siteId)
+
 		if err == nil {
 
 			for _, siteUser := range siteUsers {
@@ -41,7 +48,7 @@ func SetSiteUsers(siteUsers []entities.SiteUser) error {
 					// 一旦出现错误，立刻停止剩下的设置。
 					break
 				}
-				userNames = userNames + siteUser.SysUserDisplayname + ","
+				userNames = userNames + siteUser.SysUserDisplayname + "|" + siteUser.JobTitle + ","
 			}
 		}
 		if err == nil {
@@ -53,10 +60,14 @@ func SetSiteUsers(siteUsers []entities.SiteUser) error {
 			fieldSize, err = tools.GetDatabaseTableFieldSize(site, "Users")
 			if err == nil {
 				if len(userNames) > fieldSize {
-					userNames = userNames[0:fieldSize]
+					nameRune := []rune(userNames)
+					userNames = string(nameRune[0 : fieldSize/2])
+					userNames = strings.TrimRight(userNames, ",")
 				}
 				err = dao.SetSiteUserNames(siteId, userNames) // 设置场地用户信息显示名，方便单表查询。
+
 			}
+			//err = dao.SetSiteUserNames(siteId, userNames)
 		}
 	}
 	return err

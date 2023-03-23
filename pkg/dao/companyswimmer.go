@@ -23,3 +23,7 @@ func EnumSportsCompanySwimmersBySwimmerId(swimmerId string) ([]entities.CompanyS
 func UpdateCompanySwimmer(companySwimmer *entities.CompanySwimmer) error {
 	return Database.Table("company_swimmers").Where("swimmer_id=? and sports_company_id=?", companySwimmer.SwimmerID, companySwimmer.SportsCompanyID).UpdateColumns(companySwimmer).Error
 }
+
+func UpdateCompanySwimmerCompanyName(coId string, coName string) error {
+	return Database.Table("company_swimmers").Where("sports_company_id=?", coId).UpdateColumn("sports_company_name", coName).Error
+}

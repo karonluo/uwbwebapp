@@ -57,11 +57,12 @@ func WSQuerySwimmers(ctx iris.Context) {
 	var swimmers []entities.Swimmer
 	var err, query_err error
 	var pageCount, recordCount int64
+	var companyId string
 	result := make(map[string]interface{})
 	// body, _ := ctx.GetBody()
 	// err := json.Unmarshal(body, &companyQueryCondition)
 	queryCondition, err = tools.GenerateQueryConditionFromWebParameters(ctx.FormValue("page_size"), ctx.FormValue("page_index"), ctx.FormValue("like_value"))
-
+	companyId = ctx.FormValue("company_id")
 	if err != nil {
 		tools.ProcessError(`services.WSQuerySwimmers`,
 			`queryCondition, err = tools.GenerateQueryConditionFromWebParameters(ctx.FormValue("page_size"), ctx.FormValue("page_index"), ctx.FormValue("like_value"))`,
@@ -69,7 +70,7 @@ func WSQuerySwimmers(ctx iris.Context) {
 		message.Message = err.Error()
 		message.StatusCode = 500
 	} else {
-		swimmers, pageCount, recordCount, query_err = biz.QuerySwimmers(queryCondition)
+		swimmers, pageCount, recordCount, query_err = biz.QuerySwimmers(queryCondition, companyId)
 		if query_err != nil {
 			message.Message = query_err.Error()
 			message.StatusCode = 500

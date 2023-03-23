@@ -50,6 +50,31 @@ func WSSetSiteOwners(ctx iris.Context) {
 	ctx.JSON(message)
 }
 
+func WSUploadSiteMap(ctx iris.Context) {
+	// 上传场地平面图
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+	ctx.SetMaxRequestBodySize(conf.WebConfiguration.PostDataMaxMBSize * iris.MB)
+	siteId := ctx.FormValue("site_id")
+	file, fileHeader, err := ctx.FormFile("file")
+	if err != nil {
+		message.StatusCode = 500
+		message.Message = err.Error()
+	} else {
+		defer file.Close()
+		dest := filepath.Join("./web/images/sitemap", siteId+".jpg") // 强制改名为 场地id.jpg
+		_, err = ctx.SaveFormFile(fileHeader, dest)
+		if err != nil {
+			message.StatusCode = 500
+			message.Message = err.Error()
+		} else {
+			message.StatusCode = 200
+			message.Message = "/images/sitemap/" + siteId + ".jpg"
+		}
+	}
+
+	ctx.JSON(message)
+
+}
 func WSUploadFile(ctx iris.Context) {
 	message := WebServiceMessage{Message: true, StatusCode: 200}
 	ctx.SetMaxRequestBodySize(conf.WebConfiguration.PostDataMaxMBSize * iris.MB)

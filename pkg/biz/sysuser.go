@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 	"uwbwebapp/conf"
+	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/entities"
 	"uwbwebapp/pkg/message"
@@ -16,6 +17,19 @@ import (
 
 	"github.com/google/uuid"
 )
+
+func InitSysUserToRedis() {
+	// sysusers, _ := EnumSysUserFromDB()
+	fmt.Print("将数据库中的用户信息放入内存数据库")
+	sysusers, _ := EnumSysUserFromDB()
+
+	for _, sysuser := range sysusers {
+		// fmt.Println(sysuser)
+		// data := tools.ReflectMethod(sysuser)
+		cache.SetUserToRedis(sysuser, 0)
+	}
+	fmt.Println("......完成")
+}
 
 // TODO: ACL FROM DATABASE OR REDIS
 func GetUserACLByAuthorization() []string {
@@ -48,25 +62,19 @@ func GetUserACLByAuthorization() []string {
 func LoginSystem(loginName string, password string) (string, bool) {
 	var success bool = true
 	var msg string
-
-	sysuser, res := dao.GetUserFromRedisByLoginName(loginName)
-	if !res {
-		// 尝试从数据库中获取
-		sysuser, res, _ = dao.GetUserFromDBByLoginName(loginName)
-		if res {
-			// 设置到缓存中
-			dao.SetUserToRedis(sysuser)
-		}
-	}
+	sysuser, res := GetSysUserByLoginName(loginName)
 	if res {
-
 		if sysuser.PasswdMD5 == tools.SHA1(password) {
 			rctx := context.Background()
 			msg = tools.SHA1(uuid.New().String())
 			var token_val map[string]interface{} = make(map[string]interface{})
 			token_val["token"] = msg
 			token_val["login_name"] = loginName
-			err1 := dao.RedisDatabase.HSet(rctx, "token_"+msg, token_val).Err()
+			token_val["display_name"] = sysuser.DisplayName
+			bytes, _ := json.Marshal(sysuser)
+			token_val["sysuser"] = string(bytes)
+
+			err1 := cache.RedisDatabase.HSet(rctx, "token_"+msg, token_val).Err()
 			if err1 != nil {
 				tools.ProcessError(`biz.LoginSystem`, `dao.RedisDatabase.HSet(rctx, "token_"+msg, token_val)`, err1, "pkg/biz/sysuser.go")
 				msg = err1.Error()
@@ -75,19 +83,22 @@ func LoginSystem(loginName string, password string) (string, bool) {
 			// TODO: 放置 ACL (该用户可访问的URL和功能模块)
 			acl := GetUserACLByAuthorization()
 			res, _ := json.Marshal(acl)
-			err2 := dao.RedisDatabase.HSet(rctx, "token_"+msg, "acl", res).Err()
+			err2 := cache.RedisDatabase.HSet(rctx, "token_"+msg, "acl", res).Err()
 			if err2 != nil {
 				tools.ProcessError(`biz.LoginSystem`, `dao.RedisDatabase.HSet(rctx, "token_"+msg, "acl", res)`, err2, "pkg/biz/sysuser.go")
 				msg = err2.Error()
 				success = false
 			}
-			dao.RedisDatabase.Expire(rctx, "token_"+msg, time.Duration(conf.WebConfiguration.SessionExpireMinute)*time.Minute) // 设置20分钟后过期
+			cache.RedisDatabase.Expire(rctx, "token_"+msg, time.Duration(conf.WebConfiguration.SessionExpireMinute)*time.Minute) // 设置20分钟后过期
 		} else {
 			// 密码不正确
 			success = false
+			msg = "未找到该用户或密码错误。"
 		}
 	} else {
+		// 未找到该用户
 		success = false
+		msg = "未找到该用户或密码错误。"
 	}
 	return msg, success
 }
@@ -185,6 +196,13 @@ func UpdateSysUser(user entities.SysUser) error {
 			user.Modifier = "admin"
 		}
 		err = dao.UpdateSysUser(user)
+		if user.DisplayName != tmpUser.DisplayName {
+			//TODO: 更新所有关联表
+			// 1. 场地用户信息
+			err = dao.UpdateSiteUserUserDisplayName(user.Id, user.DisplayName)
+		}
+		cache.SetUserToRedis(user, 0) // 更新缓存
+
 	}
 
 	return err
@@ -201,17 +219,14 @@ func SendForgetPasswordEmail(email string) error {
 	emailConf := conf.WebConfiguration.EmailSmtpServerConf
 	var err error
 	if CheckHaveReSysUserByEmail(email) {
-
 		// 当检测到有该邮件地址时发送重置密码的邮件。
 		token := tools.SHA1(uuid.New().String())
 		rctx := context.Background()
 		//将 token 存入 redis 用于重置密码的key中, 并根据配置进行超时设置。
 		val := fmt.Sprintf(`{"email":"%s", "token":"%s"}`, email, token)
-		dao.RedisDatabase.Set(rctx, "resetpwd_"+token, val, time.Minute*time.Duration(emailConf.ResetSysUserPasswordEmailTimeout))
-		fmt.Println(emailConf.ResetSysUserPasswordEmailTemplate)
+		cache.RedisDatabase.Set(rctx, "resetpwd_"+token, val, time.Minute*time.Duration(emailConf.ResetSysUserPasswordEmailTimeout))
 		html := strings.ReplaceAll(emailConf.ResetSysUserPasswordEmailTemplate, "{{token}}", token)
 		html = strings.ReplaceAll(html, "{{timeout}}", fmt.Sprintf("%d", emailConf.ResetSysUserPasswordEmailTimeout))
-		fmt.Println(html)
 		err = message.SendEmail([]string{email}, html, "密码重置邮件")
 	}
 	return err
@@ -221,4 +236,31 @@ func SendForgetPasswordEmail(email string) error {
 func EnumSysUsersFromSportsCompanyIds(siteIds []string) ([]entities.SysUser, error) {
 	users, err := dao.EnumSysUsersFromSportsCompanyIds(siteIds)
 	return users, err
+}
+
+func GetSysUserByLoginName(loginName string) (entities.SysUser, bool) {
+
+	sysuser, res := dao.GetUserFromRedisByLoginName(loginName)
+	if !res {
+		// 尝试从数据库中获取
+		sysuser, res, _ = dao.GetUserFromDBByLoginName(loginName)
+		if res {
+			// 设置到缓存中
+
+			cache.SetUserToRedis(sysuser, 0)
+		} else {
+
+			// 当没有从数据库中找到用户时为防止缓存穿透对数据库进行冲击，放置一个空用户信息
+			sysuser.LoginName = loginName
+			sysuser.IsDisableLogin = true
+			sysuser.DisplayName = "anonymous"
+			cache.SetUserToRedis(sysuser, 1) // 一分钟之内查询得到空用户。
+		}
+
+	} else if sysuser.DisplayName == "anonymous" {
+		// 匿名用户，代表该用户其实不存在，通过系统虚拟出来的。
+		res = false
+
+	}
+	return sysuser, res
 }

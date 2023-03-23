@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var Database *gorm.DB
@@ -17,7 +18,9 @@ func InitDatabase() bool {
 		fmt.Print("数据库初始化")
 		dbconf := conf.WebConfiguration.DBConf
 		dsn := "host=" + dbconf.Host + " user=" + dbconf.User + " password=" + dbconf.Password + " dbname=" + dbconf.DBName + " port=" + dbconf.Port + " sslmode=disable TimeZone=Asia/Shanghai"
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Error)})
+
 		if err == nil {
 
 			sql, _ := db.DB()

@@ -1,0 +1,337 @@
+[
+	{
+		"url": "/sysuser/listall",
+		"method": "get",
+		"display_name": "列举系统用户"
+	},
+	{
+		"url": "/sysuser",
+		"method": "get",
+		"display_name": "通过登录名获取用户信息"
+	},
+	{
+		"url": "/sysuser",
+		"method": "post",
+		"display_name": "新增系统用户"
+	},
+	{
+		"url": "/sysuser",
+		"method": "delete",
+		"display_name": "删除系统用户"
+	},
+	{
+		"url": "/sysuser",
+		"method": "put",
+		"display_name": "修改系统用户(非密码字段)"
+	},
+	{
+		"url": "/login",
+		"method": "post",
+		"display_name": "系统用户登录"
+	},
+	{
+		"url": "/athorizationinfo",
+		"method": "get",
+		"display_name": "获取登录信息"
+	},
+	{
+		"url": "/swimmer",
+		"method": "get",
+		"display_name": "获取游泳者信息"
+	},
+	{
+		"url": "/swimmer",
+		"method": "post",
+		"display_name": "创建游泳者"
+	},
+	{
+		"url": "/swimmer",
+		"method": "delete",
+		"display_name": "批量删除游泳者信息"
+	},
+	{
+		"url": "/swimmer",
+		"method": "put",
+		"display_name": "修改游泳者信息"
+	},
+	{
+		"url": "/company",
+		"method": "get",
+		"display_name": "获取体育公司信息"
+	},
+	{
+		"url": "/company",
+		"method": "post",
+		"display_name": "创建体育公司"
+	},
+	{
+		"url": "/company",
+		"method": "delete",
+		"display_name": "删除体育公司"
+	},
+	{
+		"url": "/company",
+		"method": "put",
+		"display_name": "修改体育公司信息"
+	},
+	{
+		"url": "/role",
+		"method": "get",
+		"display_name": "获取系统角色信息"
+	},
+	{
+		"url": "/role",
+		"method": "post",
+		"display_name": "新增角色"
+	},
+	{
+		"url": "/role",
+		"method": "put",
+		"display_name": "修改角色信息"
+	},
+	{
+		"url": "/sysfuncpage/list",
+		"method": "get",
+		"display_name": "获取页面及功能列表"
+	},
+	{
+		"url": "/company/query",
+		"method": "get",
+		"display_name": "查询体育公司信息"
+	},
+	{
+		"url": "/companies",
+		"method": "delete",
+		"display_name": "批量删除体育公司"
+	},
+	{
+		"url": "/sysusers",
+		"method": "delete",
+		"display_name": "批量删除系统用户"
+	},
+	{
+		"url": "/sysuser/query",
+		"method": "get",
+		"display_name": "查询系统用户信息"
+	},
+	{
+		"url": "/dict",
+		"method": "get",
+		"display_name": "获取字典"
+	},
+	{
+		"url": "/swimmer/query",
+		"method": "get",
+		"display_name": "查询游泳者"
+	},
+	{
+		"url": "/site",
+		"method": "get",
+		"display_name": "获取场地信息"
+	},
+	{
+		"url": "/site",
+		"method": "post",
+		"display_name": "创建场地信息"
+	},
+	{
+		"url": "/site",
+		"method": "delete",
+		"display_name": "批量删除场地信息"
+	},
+	{
+		"url": "/site",
+		"method": "put",
+		"display_name": "修改场地信息"
+	},
+	{
+		"url": "/site/query",
+		"method": "get",
+		"display_name": "查询场地信息"
+	},
+	{
+		"url": "/dict/children",
+		"method": "get",
+		"display_name": "获取字典子集"
+	},
+	{
+		"url": "/sysuser/listall/fromcompanies",
+		"method": "get",
+		"display_name": "通过体育公司唯一编号集合获取所有下属系统用户"
+	},
+	{
+		"url": "/upload",
+		"method": "post",
+		"display_name": "测试上传文件的接口"
+	},
+	{
+		"url": "/site/setusers",
+		"method": "put",
+		"display_name": "设置场地用户集合"
+	},
+	{
+		"url": "/sysfuncpage",
+		"method": "post",
+		"display_name": "创建系统功能页面"
+	},
+	{
+		"url": "/site/setcompanies",
+		"method": "put",
+		"display_name": "将场地加入多个公司"
+	},
+	{
+		"url": "/site/enumcompanies",
+		"method": "get",
+		"display_name": "通过场地编号获取所属公司"
+	},
+	{
+		"url": "/swimmer/setcompanies",
+		"method": "put",
+		"display_name": "将游泳者加入多个公司"
+	},
+	{
+		"url": "/swimmer/setviplevel",
+		"method": "put",
+		"display_name": "设置游泳者会员等级"
+	},
+	{
+		"url": "/swimmer/companyswimmer",
+		"method": "get",
+		"display_name": "通过游泳者编号和公司编号获取其会员信息"
+	},
+	{
+		"url": "/swimmer/companyswimmer",
+		"method": "put",
+		"display_name": "修改公司会员信息"
+	},
+	{
+		"url": "/comgtgroup",
+		"method": "post",
+		"display_name": "创建公司管理组"
+	},
+	{
+		"url": "/comgtgroup",
+		"method": "delete",
+		"display_name": "删除公司管理组"
+	},
+	{
+		"url": "/comgtgroup",
+		"method": "put",
+		"display_name": "更新体育公司管理组信息"
+	},
+	{
+		"url": "/company/mgtgroup",
+		"method": "get",
+		"display_name": "通过公司管理组获取其下所有公司"
+	},
+	{
+		"url": "/comgtgroup/joincompanies",
+		"method": "put",
+		"display_name": "将公司加入到管理组"
+	},
+	{
+		"url": "/systemlog/operationlog",
+		"method": "post",
+		"display_name": "创建操作日志"
+	},
+	{
+		"url": "/uwbtag",
+		"method": "get",
+		"display_name": "获取UWB标签信息"
+	},
+	{
+		"url": "/uwbtag",
+		"method": "post",
+		"display_name": "创建新的UWB标签"
+	},
+	{
+		"url": "/uwbtag/query",
+		"method": "get",
+		"display_name": "查询UWB标签信息"
+	},
+	{
+		"url": "/comgtgroup/query",
+		"method": "get",
+		"display_name": "查询公司管理组"
+	},
+	{
+		"url": "/role/joinfuncpage",
+		"method": "put",
+		"display_name": "绑定角色和功能页面"
+	},
+	{
+		"url": "/role/funcpages",
+		"method": "get",
+		"display_name": "根据角色查询其下所有功能页面"
+	},
+	{
+		"url": "/swimmer/enumcompanies",
+		"method": "get",
+		"display_name": "通过游泳者编号获取其所属公司关系集合"
+	},
+	{
+		"url": "/site/enumusers",
+		"method": "get",
+		"display_name": "通过场地编号获取所有场地用户"
+	},
+	{
+		"url": "/role/query",
+		"method": "get",
+		"display_name": "查询角色信息"
+	},
+	{
+		"url": "/calendar/swimmersite/enter",
+		"method": "put",
+		"display_name": "游泳者入场登记"
+	},
+	{
+		"url": "/calendar/datescope",
+		"method": "get",
+		"display_name": "根据日期范围和场地编号获取其所有游泳者的日程"
+	},
+	{
+		"url": "/calendar/swimmersite/exit",
+		"method": "put",
+		"display_name": "游泳者退场签出"
+	},
+	{
+		"url": "/calendar/swimmersite/plancycle",
+		"method": "put",
+		"display_name": "游泳者训练计划制定(未实现)"
+	},
+	{
+		"url": "/calendar/report",
+		"method": "get",
+		"display_name": "生成训练报告(未实现)"
+	},
+	{
+		"url": "/site/enumsites",
+		"method": "get",
+		"display_name": "枚举指定用户所有场地信息"
+	},
+	{
+		"url": "/calendar/swimmersite/cancleplaycycle",
+		"method": "put",
+		"display_name": "取消游泳者训练计划"
+	},
+	{
+		"url": "/uploadsitemap",
+		"method": "post",
+		"display_name": "上传场地平面图"
+	},
+	{
+		"url": "/site/envcalendar",
+		"method": "post",
+		"display_name": "创建场地环境日历"
+	},
+	{
+		"url": "/site/envcalendar",
+		"method": "put",
+		"display_name": "更新场地环境日历"
+	},
+	{
+		"url": "/sites/enumenvcalendars",
+		"method": "get",
+		"display_name": "枚举日期段的场地环境信息"
+	}
+]

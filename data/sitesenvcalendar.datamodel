@@ -1,0 +1,9 @@
+site_id
+date
+temp
+humidity
+ph
+create_datetime
+modify_datetime
+Creator
+Modifier

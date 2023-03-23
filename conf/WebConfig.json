@@ -1,8 +1,9 @@
 {
-	"Version":"1.0",
+	"Version": "1.0",
 	"Port": ":8001",
 	"SessionExpireMinute": 20,
 	"PostDataMaxMBSize": 10,
+	"IsThroughBackendForWriteOperateLog": true,
 	"RedisConf": {
 		"Port": "6379",
 		"Password": "",
@@ -17,11 +18,11 @@
 		"DBName": "db_uwb"
 	},
 	"MQTTServerConf": {
-		"Port": 1883,
+		"Port": 18883,
 		"WebSockertPort": 8083,
-		"Broker": "127.0.0.1",
-		"User": "admin",
-		"Password": "pass@@word123"
+		"Broker": "mqtt.4g.zah.dhwork.cn",
+		"User": "dhza_mqtt_tmp1",
+		"Password": "doon1eiMaiBeChus"
 	},
 	"EmailSmtpServerConf": {
 		"Host": "smtp.126.com",
@@ -31,5 +32,20 @@
 		"Identity": "",
 		"ResetSysUserPasswordEmailTemplate": "点击<a href='http://172.0.0.1/resetpwd?token={{token}}' target='_blank'>重置密码 </a>或进入重置密码的页面输入验证码 {{token}} <p> 该验证码在 {{timeout}} 分钟内有效",
 		"ResetSysUserPasswordEmailTimeout": 10
+	},
+	"UWBDevicePlatformConf": {
+		"Address": "http://uwb-webui.4g.zah.dhwork.cn:80",
+		"User": "18280324544",
+		"Password": "12345678",
+		"LoginInterface": "/v1/authorization/login",
+		"SearchTerminalInterface": "/v1/terminal/search",
+		"GetTerminalInterface":"/v1/terminal/",
+		"UpdateTerminalInterface":"/v1/terminal/",
+		"CreateTerminalInterface":"/v1/terminal",
+		"ApplicationId": 2,
+		"OrganizationId": 3,
+		"DefaultRegionId":2,
+		"DefaultTerminalModelId": 2
+		
 	}
 }

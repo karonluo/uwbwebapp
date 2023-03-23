@@ -54,6 +54,18 @@ func UpdateSite(site *entities.Site) error {
 			site.Modifier = "admin"
 		}
 		err = dao.UpdateSite(site)
+		if err == nil {
+			if site.DisplayName != tmpSite.DisplayName {
+				// TODO: 修改所有关联表
+				// 1. 场地用户关联表
+				err = dao.UpdateSitUserSiteDisplayName(site.Id, site.DisplayName)
+				// 2. 修改UWB基站绑定的场地显示名
+				if err == nil {
+					err = dao.UpdateUWBBaseStationSiteDisplayName(site.Id, site.DisplayName)
+				}
+
+			}
+		}
 	}
 	return err
 }

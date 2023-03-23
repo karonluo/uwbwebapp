@@ -82,3 +82,15 @@ func QuerySportsCompanies(companyQueryCodition entities.QueryCondition) ([]entit
 	}
 	return companies, result.Error
 }
+
+// 通过用户编号获取，他可管理的公司
+func EnumSportsCompaniesByRightUser(userId string) ([]entities.SportsCompany, error) {
+	var cos []entities.SportsCompany
+	sql := `SELECT co.id, co.name, co.address, co.telephone_list FROM sports_companies as co 
+	LEFT JOIN rel_company_groups AS rel on rel.co_id = co.id
+	LEFT JOIN company_group_right_users AS rights on rights.co_group_id = rel.co_group_id
+	LEFT JOIN sys_users AS u on u."id" = rights.sys_user_id
+	WHERE u."id" = ?`
+	err := Database.Raw(sql, userId).Find(&cos).Error
+	return cos, err
+}

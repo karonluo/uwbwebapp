@@ -120,6 +120,7 @@ func WSRelSportsCompanyAndSites(ctx iris.Context) {
 			}
 		}
 	}
+	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)
 }
 
@@ -153,6 +154,35 @@ func WSQueryCompanies(ctx iris.Context) {
 			result["sports_companies"] = companies
 			message.Message = result
 		}
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
+
+func WSEnumSportsCompaniesByGroupId(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+
+	result, err := biz.EnumSportsCompaniesByGroupId(ctx.FormValue("group_id"))
+	if err != nil {
+		message.StatusCode = 500
+		message.Message = err.Error()
+		tools.ProcessError("services.WSEnumSportsCompaniesByGroupId", `results, err:=biz.EnumSportsCompaniesByGroupId(ctx.FormValue("group_id"))`, err)
+	} else {
+		message.Message = result
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
+func WSEnumSportsCompaniesByRightUser(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+
+	result, err := biz.EnumSportsCompaniesByRightUser(ctx.FormValue("user_id"))
+	if err != nil {
+		message.StatusCode = 500
+		message.Message = err.Error()
+		tools.ProcessError("services.WSEnumSportsCompaniesByRightUser", `result, err := biz.EnumSportsCompaniesByRightUser(ctx.FormValue("user_id"))`, err)
+	} else {
+		message.Message = result
 	}
 	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)

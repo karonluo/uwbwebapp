@@ -1,10 +1,16 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 	"uwbwebapp/conf"
+	"uwbwebapp/pkg/asynctimer"
 	"uwbwebapp/pkg/biz"
+	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/entities"
 	"uwbwebapp/pkg/message"
@@ -41,7 +47,7 @@ func TestUpdateSysUser() {
 	}
 }
 func TestSendEmail() {
-	rev := []string{`lk139@126.com`, `karonsoft@126.com`, `wengkaiqin@163.com`}
+	rev := []string{`lk139@126.com`}
 	message.SendEmail(rev, `<div>点击链接 <a href='https://www.baidu.com?token=u123456uid' target='_blank'>重置密码</a></div>`, `Karonsoft 注册账号 [admin] 重置密码`)
 }
 func TestResetPasswordEmail() {
@@ -61,119 +67,189 @@ func TestResetPasswordEmail() {
 func main() {
 	conf.LoadWebConfig("../conf/WebConfig.json")
 	dao.InitDatabase()
-	dao.InitRedisDatabase()
-	fmt.Println(uuid.New().String())
-	var site entities.Site
-	fieldSize, err := tools.GetDatabaseTableFieldSize(site, "Users")
+	cache.InitRedisDatabase()
+	// nodate := "2001-01-01 00:00:00"
+	// tnodate, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, nodate)
+	// fmt.Println(tnodate)
+	// fmt.Println(tools.CheckNoDate(tnodate))
+	cbt, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, "2021-01-01 01:30:35")
+	cet, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, "2021-01-01 05:30:35")
+
+	tbt, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, "2021-01-01 01:25:00")
+	tet, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, "2021-01-01 01:29:00")
+
+	fmt.Println(tet)
+	result, _ := tools.CheckTimesHasOverlap(cbt, cet, tbt, tet)
+	fmt.Println(result)
+	// data, err := biz.UWBDevicePlatformLogin()
+	// if err == nil {
+	// 	// fmt.Println(data["data"])
+
+	// 	fmt.Println(data.Data.AccessToken)
+	// }
+	var query entities.QueryCondition
+	query.LikeValue = ""
+	query.PageIndex = 1
+	query.PageSize = 10
+
+	res, er := biz.UWBDevicePlatformQueryTerminal(query)
+	if er == nil {
+		// fmt.Println(res)
+		var searchResult entities.UWBDevicePlatformTerminalSearchResult
+		json.Unmarshal([]byte(res), &searchResult)
+		for _, v := range searchResult.Data.Data {
+			fmt.Printf("UWB TERMINAL INFORMATION %s\r\nSerial Number: %s, Property-Test: %s\r\n", v.Name, v.SerialNumber, v.Properties.Test)
+		}
+	} else {
+		fmt.Println(er.Error())
+	}
+
+	// 获取场地游泳者统计报表
+	DoEnumSiteSimmerForReport()
+
+	// // 获取 UWB 终端标签信息
+	DoGetTerminal()
+	// // 更新 UWB 终端标签信息
+	// DoUpdateTerminal()
+	// // 获取 UWB 终端标签信息
+	// DoGetTerminal()
+
+	// 做时间相关测试
+	//DoTimeTest()
+	// 测试危险告警
+	// DoDangerAlert()
+
+	// DoCacheTest()
+	DoQuerySwimmerTest()
+
+	cos, err := dao.EnumSportsCompaniesByRightUser("d2f3de8b-b091-434f-b66f-62c9ec0eab48")
 	if err == nil {
-		fmt.Println(fieldSize)
+		text, _ := json.Marshal(cos)
+		fmt.Println(string(text))
+	}
+
+	codes, ere := dao.EnumSiteFences("543b8172-5bcc-aeaa-f5a4-a637608fb737")
+	if ere == nil {
+		for _, code := range codes {
+			fmt.Println(code)
+		}
+	}
+}
+func DoQuerySwimmerTest() {
+	var query entities.QueryCondition
+	query.LikeValue = ""
+	query.PageIndex = 1
+	query.PageSize = 10
+	var company_id string = `5a606630-d515-4724-8579-b12af464ddeb`
+	res, pageCount, recordCount, err := biz.QuerySwimmers(query, company_id)
+	fmt.Printf("总页数: %d\r\n", pageCount)
+	fmt.Printf("总记录数: %d\r\n", recordCount)
+	if err == nil {
+		for _, swimmer := range res {
+			fmt.Println(swimmer.DisplayName)
+		}
 	} else {
 		fmt.Println(err.Error())
 	}
+}
+func DoCacheTest() {
+	// 测试当 key 为空时返回什么内容。
+	rctx := context.Background()
+	result, err := cache.RedisDatabase.Get(rctx, "hello").Result()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Printf("result: '%s'", result)
+}
 
-	var strTest = "0123456789"
-	fmt.Println(strTest[0:10])
-	// site, err := dao.GetSiteById("847c2917-a3db-4f47-916e-ff3421eb64e1")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// } else {
-	// 	fmt.Println(site.Address)
+func DoDangerAlert() {
+	go asynctimer.AlertDangerInformation()
+	for {
+		time.Sleep(500 * time.Millisecond)
+	}
+}
+func DoGetTerminal() {
+	res, er := biz.UWBDevicePlatformGetTerminal("00002AC111000002")
+	if er == nil {
+		fmt.Println(res)
+		var o entities.UWBDevicePlatformTerminalGetResult
+		er = json.Unmarshal([]byte(res), &o)
+		if er != nil {
+			fmt.Println(er.Error())
+		}
+	} else {
+		fmt.Println(er.Error())
+	}
+}
+
+func DoUpdateTerminal() {
+
+	_, er := biz.UWBDevicePlatformUpdateTerminal("钱芳", "女", "6B03FaD8-c259-bd6E-5d0c-CafAB79DE9c8", "00002AC111000002",
+		conf.WebConfiguration.UWBDevicePlatformConf.DefaultTerminalModelId)
+
+	if er != nil {
+		fmt.Println(er.Error())
+	}
+}
+func DoTimeTest() {
+	t, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, "2023-03-13 17:55:05")
+	st1 := time.Now().Format(tools.GOOGLE_DATETIME_FORMAT_NO_NANO)
+	now, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, st1)
+	tsub := now.Sub(t)
+	fmt.Printf("当前时间与指定时间相差：%f 秒\r\n", tsub.Seconds())
+
+	// fmt.Println(time.Now().Format(tools.GOOGLE_DATETIME_FORMAT_NO_DATE_NO_NANO))
+	// t, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_DATE_NO_NANO, "23:59:59")
+	// fmt.Println(t.Format(tools.GOOGLE_DATETIME_FORMAT))
+	// fmt.Println(t.Hour() - time.Now().Hour())
+	// go asynctimer.SumSwimmerDistance()
+	// for {
+	// 	time.Sleep(500 * time.Millisecond)
 	// }
-
-	// testRefVariable(&site) // 传输的是对象内存地址而非对象实例，因此内存地址中的值，发生变化时 site 本身的值也会跟着变化，这个和直接传输实例有根本性的不同，实例通过传输形成的时新的实例。
-	// fmt.Println(site.Address)
-
-	// testRelVariable(site)
-	// fmt.Println(site.Address)
-	// TestResetPasswordEmail()
-	//TestUpdateSysUser()
-	//TestGetSysUserFromDBById()
-	// companyIds := []string{"3efc5bfa-e039-d83b-e9fa-2ce3c9605498", "a883fd35-0041-9a64-1f7e-26a7a312b5b4"}
-
-	// er1 := dao.DeleteSportsCompanies(companyIds)
-	// if er1 != nil {
-	// 	fmt.Println(er1.Error())
-	// } else {
-	// 	fmt.Println("delete sports_companies is success")
-	// }
-
-	// dictvaleus, err := dao.GetSystemDictValues("job_title")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
-	// for _, dv := range dictvaleus {
-	// 	fmt.Println(dv.Value)
-	// }
-	// dictValue, _ := dao.GetSystemDictValue("1001")
-	// fmt.Println(dictValue.Value)
-
-	// var condition entities.QueryCondition
-	// condition.LikeValue = "98"
-	// condition.PageIndex = 1
-	// condition.PageSize = 5
-	// // cos, err := dao.QuerySportsCompanies(condition)
-
-	// cos, pageCount, err := biz.QueryCompanies(condition)
-	// if err != nil {
-	// 	tools.ProcessError(`unittest.main`, `cos, err := dao.QuerySportsCompanies(condition)`, err)
-	// } else {
-	// 	fmt.Printf("总共: %d 页数据\r\n", pageCount)
-	// 	btmp, _ := json.Marshal(cos)
-	// 	// for _, co := range cos {
-	// 	// 	btmp, _ := json.Marshal(co)
-	// 	// 	fmt.Println(string(btmp))
-	// 	// }
-	// 	fmt.Println(string(btmp))
-	// }
-
-	// var swimmer entities.Swimmer
-	// swimmer.Id = uuid.New().String()
-	// swimmer.ModifyDatetime = time.Now()
-	// swimmer.CreateDatetime = time.Now()
-
-	// result, _ := json.Marshal(&swimmer)
-
-	// fmt.Println(string(result))
-
-	// funcName := flag.String("func", "ver", "测试功能")
-	// flag.Parse()
-	// switch *funcName {
-	// case "DoTestPublish":
-	// 	{
-	// 		fmt.Println(*funcName)
-	// 		DoTestPublish()
-	// 		break
+}
+func DoEnumSiteSimmerForReport() {
+	// result, err := dao.EnumSiteSimmerForReport("29972eb5-6419-48d2-94e1-e3bc5bb99188")
+	// if err == nil {
+	// 	for _, swimmer := range result {
+	// 		fmt.Printf("Swimmer: %s, age:%d, gender:%s\r\n", swimmer.DisplayName, swimmer.Age, swimmer.Gender)
 	// 	}
-
-	// }
-
-	// objs, _ := json.Marshal(EnumSiteOwners("847c2917-a3db-4f47-916e-ff3421eb64e1"))
-	// fmt.Println(string(objs))
-
-	// var u entities.SysUser
-	// u.LoginName = "admin"
-	// res := biz.CheckHaveReSysUserByCellphone("18615768209")
-	// var message web.WebMessage
-	// message.StatusCode = 200
-	// message.Message = res
-	// smessage, _ := json.Marshal(message)
-	// fmt.Println(string(smessage))
-
-	// mqtt.InitMQTTClient()
-
-	// sysuser, success := dao.GetUserFromRedisByLoginName("yangqin")
-	// if success {
-	// 	fmt.Println(sysuser.DisplayName)
 	// } else {
-	// 	fmt.Println("未找到该用户!")
+	// 	fmt.Println(err.Error())
 	// }
-	// biz.ClearSiteOwners("847c2917-a3db-4f47-916e-ff3421eb64e1")
-	// biz.SetSiteOwners("847c2917-a3db-4f47-916e-ff3421eb64e1", "ecb22d21-e346-44f7-bfd1-4b58f66ed226,dec9fd43-f95b-4888-95d5-cbe9f30c2d58")
-	// // TestMQTTPulishMessage()
-	// //result, _ := json.Marshal(EnumSiteOwners("847c2917-a3db-4f47-916e-ff3421eb64e1"))
-	// //fmt.Println(string(result))
-	// //CreateUser()
+	report, _ := biz.SiteSwimmerReport("29972eb5-6419-48d2-94e1-e3bc5bb99188")
+	bytes, _ := json.Marshal(report)
+	fmt.Println(string(bytes))
+}
+func DoGenerateSysFuncPagesToDB() {
+	type TMP struct {
+		Url         string `json:"url"`
+		Method      string `json:"method"`
+		DisplayName string `json:"display_name"`
+	}
+	var tmp []TMP
+	var bcontent []byte
+	bcontent, _ = os.ReadFile("../sysfuncpages.json")
+	fmt.Println(string(bcontent))
+	json.Unmarshal(bcontent, &tmp)
+	var pageId string
+	var err error
+	for idx, t := range tmp {
+		// fmt.Println(t.Url)
+		var funcPage entities.SysFuncPage
+		funcPage.DisplayName = t.DisplayName
+		funcPage.OrderKey = idx
+		funcPage.URLAddress = t.Url
+		funcPage.ParentID = "top"
+		funcPage.URLType = "INTERFACE"
+		funcPage.URLMethod = strings.ToUpper(t.Method)
+		pageId, err = biz.CreateSysFuncPage(&funcPage)
+		if err != nil {
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println(pageId)
+		}
 
+	}
 }
 func TestMQTTPulishMessage() {
 	var i int

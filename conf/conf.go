@@ -23,16 +23,33 @@ type RedisConfiguration struct {
 	DBId     int
 }
 
+type UWBDevicePlatformConfiguration struct {
+	Address                 string
+	User                    string
+	Password                string
+	LoginInterface          string
+	SearchTerminalInterface string
+	GetTerminalInterface    string
+	UpdateTerminalInterface string
+	CreateTerminalInterface string
+	ApplicationId           int64
+	OrganizationId          int64
+	DefaultRegionId         int64
+	DefaultTerminalModelId  int64
+}
+
 type WebConfig struct {
-	Port                string
-	SessionExpireMinute int
-	Version             string
-	PostDataMaxMBSize   int64
-	DBConf              DBConfiguration
-	RedisConf           RedisConfiguration
-	MQTTServerConf      MQTTServerConfiguration
-	EmailSmtpServerConf EmailSmtpServerConfiguration
-	UrlPathList         []string
+	Port                               string
+	SessionExpireMinute                int
+	Version                            string
+	PostDataMaxMBSize                  int64
+	DBConf                             DBConfiguration
+	RedisConf                          RedisConfiguration
+	MQTTServerConf                     MQTTServerConfiguration
+	EmailSmtpServerConf                EmailSmtpServerConfiguration
+	UWBDevicePlatformConf              UWBDevicePlatformConfiguration
+	UrlPathList                        []string
+	IsThroughBackendForWriteOperateLog bool // 是否通过后端写操作日志，建议为 false
 }
 
 type MQTTServerConfiguration struct {

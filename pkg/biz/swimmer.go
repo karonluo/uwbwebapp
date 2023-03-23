@@ -1,8 +1,10 @@
 package biz
 
 import (
+	"fmt"
 	"math"
 	"time"
+	"uwbwebapp/conf"
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/entities"
 	"uwbwebapp/pkg/tools"
@@ -12,8 +14,8 @@ import (
 
 func CreateSwimmer(swimmer entities.Swimmer) (string, error) {
 
-	if swimmer.Id == "" {
-		swimmer.Id = uuid.New().String()
+	if swimmer.ID == "" {
+		swimmer.ID = uuid.New().String()
 	}
 
 	if swimmer.Creator == "" {
@@ -26,15 +28,17 @@ func CreateSwimmer(swimmer entities.Swimmer) (string, error) {
 	swimmer.CreateDatetime = time.Now()
 	swimmer.ModifyDatetime = time.Now()
 	err := dao.CreateSwimmer(swimmer)
-	return swimmer.Id, err
+	return swimmer.ID, err
 }
 
-func QuerySwimmers(queryCondition entities.QueryCondition) ([]entities.Swimmer, int64, int64, error) {
+// 查询游泳者信息
+// 游泳者集合, 页数，数据项总数，错误信息
+func QuerySwimmers(queryCondition entities.QueryCondition, companyId string) ([]entities.Swimmer, int64, int64, error) {
 	var swimmers []entities.Swimmer
-	dataRecordCount, err := dao.GetSwimmersCount(queryCondition)
+	dataRecordCount, err := dao.GetSwimmersCount(queryCondition, companyId)
 	pageCount := float64(dataRecordCount) / float64(queryCondition.PageSize)
 	if err == nil {
-		swimmers, err = dao.QuerySwimmers(queryCondition)
+		swimmers, err = dao.QuerySwimmers(queryCondition, companyId)
 	}
 
 	return swimmers, int64(math.Ceil(pageCount)), dataRecordCount, err
@@ -51,18 +55,34 @@ func DeleteSwimmers(ids []string) error {
 }
 
 func UpdateSwimmer(swimmer entities.Swimmer) error {
-	var tmpSwimmer entities.Swimmer
+	var oriSwimmer entities.Swimmer
 	var err error
-	tmpSwimmer, err = dao.GetSwimmersById(swimmer.Id)
+	oriSwimmer, err = dao.GetSwimmersById(swimmer.ID)
 	if err == nil {
 		// 防止以下字段被修改
-		swimmer.CreateDatetime = tmpSwimmer.CreateDatetime
-		swimmer.Creator = tmpSwimmer.Creator
+		swimmer.CreateDatetime = oriSwimmer.CreateDatetime
+		swimmer.Creator = oriSwimmer.Creator
 		swimmer.ModifyDatetime = time.Now()
 		if swimmer.Modifier == "" {
 			swimmer.Modifier = "admin"
 		}
-		err = dao.UpdateSwimmer(swimmer)
+		if swimmer.DisplayName != oriSwimmer.DisplayName {
+			err = dao.UpdateSwimmerDisplayNameRelTables(swimmer.ID, swimmer.DisplayName)
+		}
+		if err == nil {
+			err = dao.UpdateSwimmer(swimmer)
+			if err == nil {
+				// UWBDevicePlatformUpdateTerminal(swimmer.DisplayName, swimmer.Gender, cs.UWBTagCode, conf.WebConfiguration.UWBDevicePlatformConf.DefaultTerminalModelId)
+				// 获取该游泳者所有的标签
+				css, _ := SwimmerEnumCompanies(swimmer.ID)
+				for _, cs := range css {
+					UWBDevicePlatformUpdateTerminal(swimmer.DisplayName, swimmer.Gender, swimmer.ID, cs.UWBTagCode, conf.WebConfiguration.UWBDevicePlatformConf.DefaultTerminalModelId)
+				}
+
+			} else {
+				err = fmt.Errorf("更新失败。")
+			}
+		}
 	}
 
 	return err
@@ -76,57 +96,44 @@ func SwimmerJoinInSportsCompanies(css []entities.CompanySwimmer, swimmerId strin
 	var errs []error
 	// var originJoined []entities.CompanySwimmer
 	var newJoined []entities.CompanySwimmer
-	err = dao.ClearAllCompaniesFromSwimmer(swimmerId)
+	err = dao.CancelAllUWBTagsBySwimmerId(swimmerId) // 首先取消该游泳者所有标签。
 	if err == nil {
-		for _, cs := range css {
-			// TODO: 需要优化
-			/*
-				_, dataRecordCount, err = dao.GetCompanySwimmerByCompanyIDAndSwimmerID(cs.SportsCompanyID, cs.SwimmerID)
-				if dataRecordCount == 1 {
-					originJoined = append(originJoined, cs)
-				} else {
-					err = dao.CreateCompanySwimmer(&cs)
+		err = dao.ClearAllCompaniesFromSwimmer(swimmerId) // 清楚游泳者和公司的关系
+		if err == nil {
+			for _, cs := range css {
+				err = dao.CreateCompanySwimmer(&cs) // 重新建立公司关系
+				cs.CreateDatetime = time.Now()
+				cs.ModifyDatetime = time.Now()
+				if cs.Creator == "" {
+					cs.Creator = "admin"
+				}
+				cs.Modifier = cs.Creator
+				if err == nil {
+					// 设置标签绑定状态
+					err = dao.SetUWBTagSwimmerBoundStatus(cs.UWBTagCode, true) // 重新绑定 UWB 标签
+					if err == nil {
+						// 设置UWB管理平台中的终端标签
+						UWBDevicePlatformUpdateTerminal(cs.SwimmerDisplayName, cs.SwimmerGender, cs.SwimmerID, cs.UWBTagCode, conf.WebConfiguration.UWBDevicePlatformConf.DefaultTerminalModelId)
+					}
 					if err == nil {
 						newJoined = append(newJoined, cs)
-					} else {
-						errs = append(errs, err)
 					}
+				} else {
+					errs = append(errs, err)
+					tools.ProcessError("biz.SwimmerJoinInSportsCompany", `err = dao.CreateCompanySwimmer(&cs)`, err)
 				}
-			*/
-			// 目前的方式，需要前端进行优先判断，只加入曾经未加入的公司。
-			err = dao.CreateCompanySwimmer(&cs)
-			cs.CreateDatetime = time.Now()
-			cs.ModifyDatetime = time.Now()
-			if cs.Creator == "" {
-				cs.Creator = "admin"
 			}
-			cs.Modifier = cs.Creator
-			if err == nil {
-				newJoined = append(newJoined, cs)
-			} else {
-				errs = append(errs, err)
-				tools.ProcessError("biz.SwimmerJoinInSportsCompany", `err = dao.CreateCompanySwimmer(&cs)`, err)
-
-			}
+		} else {
+			tools.ProcessError("biz.SwimmerJoinInSportsCompany", `err = dao.ClearAllCompaniesFromSwimmer(swimmerId)`, err)
 		}
 	} else {
-		tools.ProcessError("biz.SwimmerJoinInSportsCompany", `err = dao.ClearAllCompaniesFromSwimmer(swimmerId)`, err)
+		tools.ProcessError("biz.SwimmerJoinInSportsCompany", `err = dao.CancelAllUWBTagsBySwimmerId(swimmerId)`, err)
 	}
 	return newJoined, errs
 }
 
 func SwimmerEnumCompanies(swimmerId string) ([]entities.CompanySwimmer, error) {
 	return EnumSportsCompanySwimmersBySwimmerId(swimmerId)
-}
-
-// 设置游泳者进入场地日期时间
-func SetSwimmerEnterToSite(swimmerId string, siteId string, enterTime time.Time) {
-
-}
-
-// 设置游泳者退出场地日期时间
-func SetSwimmerExitestFromSite(swimmerId string, siteId string, enterTime time.Time) {
-
 }
 
 func SetSwimmerVIPLevel(swimmerId string, companyId string, vipLevelDictCode string, vipLevel string, modifier string) error {

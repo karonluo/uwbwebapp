@@ -1,0 +1,12 @@
+Id
+site_id
+training_begin_datetime
+training_end_datetime
+swimmer_id
+total_mileage
+enter_datetime
+exit_datetime
+create_datetime
+modify_datetime
+Creator
+Modifier
