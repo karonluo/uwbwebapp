@@ -12,7 +12,12 @@ func GetUWBBaseStationByCode(code string) (entities.UWBBaseStation, error) {
 	// InitDatabase()
 	return baseStation, result.Error
 }
+func EnumUWBBaseStationBySiteId(siteId string) ([]entities.UWBBaseStation, error) {
+	var baseStations []entities.UWBBaseStation
+	result := Database.Find(&baseStations, "site_id=?", siteId)
+	return baseStations, result.Error
 
+}
 func CreateUWBBaseStation(station *entities.UWBBaseStation) error {
 
 	return Database.Create(station).Error

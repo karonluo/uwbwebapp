@@ -33,7 +33,7 @@ type SwimmerCalendar struct {
 	SiteID                string    `json:"SiteId"`
 	SwimmerID             string    `json:"SwimmerId"`
 	SwimmerDisplayName    string    `gorm:"column:swimmer_display_name" json:"SwimmerDisplayName"`
-	TotalMileage          float32   `json:"TotalMileage"`                   // 总里程，当前台人员登记出场时即时计算本次游泳总里程
+	TotalMileage          float64   `json:"TotalMileage"`                   // 总里程，当前台人员登记出场时即时计算本次游泳总里程
 	TrainingBeginDatetime time.Time `json:"TrainingBeginDatetime"`          // 训练开始日期时间，由教练指定
 	TrainingEndDatetime   time.Time `json:"TrainingEndDatetime"`            // 训练结束日期时间，由教练指定(注意不能超过开始日期）
 	IsCycle               bool      `gorm:"column:is_cycle" json:"IsCycle"` // 如果是训练计划记录，需要指定是否为周期性的。

@@ -162,3 +162,19 @@ func WSRemoveSystemUsersFromGroup(ctx iris.Context) {
 	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)
 }
+
+func WSEnumSystemUsersFromGroup(ctx iris.Context) {
+
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+
+	groupId := ctx.FormValue("group_id")
+	users, err := biz.EnumSystemUsersFromGroup(groupId)
+	if err != nil {
+		message.Message = err
+		message.StatusCode = 500
+	} else {
+		message.Message = users
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 	"uwbwebapp/pkg/biz"
 	"uwbwebapp/pkg/cache"
@@ -13,6 +14,15 @@ import (
 	"github.com/ahmetb/go-linq/v3"
 )
 
+// 返回最后一次接收到的标签信息是否大于告警阈值
+func lastedRecvUWBInformationThanThreshold(uwbInfor entities.UWBTerminalMQTTInformation, threshold float64) bool {
+	tmp := uwbInfor.InCacheDateTime.Format(tools.GOOGLE_DATETIME_FORMAT_NO_NANO)
+	inCacheDateTime, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, tmp)
+	tmp = time.Now().Format(tools.GOOGLE_DATETIME_FORMAT_NO_NANO)
+	now, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, tmp)
+	return now.Sub(inCacheDateTime).Seconds() > threshold
+}
+
 func AlertDangerInformation() {
 	for {
 		time.Sleep(10 * time.Second)
@@ -20,33 +30,35 @@ func AlertDangerInformation() {
 		calendars, err := biz.EnumAllSwimmerCalendarsOnSite()
 		if err == nil {
 			for _, cal := range calendars {
-				uwbInfor, _ := cache.GetUWBTerminalTagFromRedis(cal.SwimmerID)
-				tmp := uwbInfor.InCacheDateTime.Format(tools.GOOGLE_DATETIME_FORMAT_NO_NANO)
-				inCacheDateTime, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, tmp)
-				tmp = time.Now().Format(tools.GOOGLE_DATETIME_FORMAT_NO_NANO)
-				now, _ := time.Parse(tools.GOOGLE_DATETIME_FORMAT_NO_NANO, tmp)
-				conf, _ := biz.GetSystemDict("4001")
-				threshold, _ := strconv.ParseFloat(conf.Value, 64)
-				fmt.Println(conf.Value)
-				fmt.Println(threshold)
-				if now.Sub(inCacheDateTime).Seconds() > threshold {
-
-					fmt.Printf("Danger: %s\r\n", uwbInfor.Properties.SwimmerDisplayName) // 把数据塞入告警缓存
+				uwbInfor, _ := cache.GetUWBTerminalTagFromRedis(cal.SwimmerID) // 从缓存中找到标签信息
+				//! 注意 UWB 标签，目前 Z 为 X，Y 为 Y，X 未启用
+				timeoutConf, _ := biz.GetSystemDict("4001") // 字典 4001 是危险告警的 timeout
+				threshold, _ := strconv.ParseFloat(timeoutConf.Value, 64)
+				conf_danger_alert_template, _ := biz.GetSystemDict("4003") // 字典 4003 是危险告警的模板
+				// 最后一次收到的UWB信息超过了告警超时阈值并且该UWB消息在场地中，此时可能产生溺水风险。
+				if lastedRecvUWBInformationThanThreshold(uwbInfor, threshold) && biz.CheckPointInSite(uwbInfor, cal.SiteID) {
 					var info entities.AlertInformation
 					info.DevEui = uwbInfor.DevEui
-					info.Message = fmt.Sprintf("危险告警，%s 可能出现溺水，已经 %d 秒未在泳池内检测到该人员。", info.SwimmerDisplayName, int(threshold))
+					msg := strings.ReplaceAll(conf_danger_alert_template.Value, "[人员]", info.SwimmerDisplayName)
+					msg = strings.ReplaceAll(msg, "[时间]", fmt.Sprintf("%d", int(threshold)))
+					info.Message = msg
 					info.Type = "danger"
-					info.X = uwbInfor.X
+					info.X = uwbInfor.Z
 					info.Y = uwbInfor.Y
-					cache.SetAlertInformationToRedis(&info)
+					cache.SetAlertInformationToRedis(&info) // 将告警信息插入告警缓存，让客户端通过 websocket 获取
+					fmt.Println(msg)
+					// biz.SpeakMessageAlert()
+					//TODO: 调用音响功能
+					//biz.SpeakMessage(info.Message)
 				}
 			}
 		}
 	}
 }
+
 func AlertNormalInformation() {
 	type Infor struct {
-		SumDistence        float32
+		SumDistence        float64
 		SwimmerId          string
 		SwimmerDisplayName string
 	}

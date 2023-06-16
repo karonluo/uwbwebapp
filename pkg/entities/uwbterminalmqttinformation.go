@@ -23,19 +23,20 @@ func (r *UWBTerminalMQTTInformation) Marshal() ([]byte, error) {
 
 // UWBTerminalMQTTInformation
 type UWBTerminalMQTTInformation struct {
-	Alt             float32       `json:"alt"`
+	Alt             float64       `json:"alt"`
 	DevEui          string        `json:"devEui"`
-	Distance        float32       `json:"distance"`
-	Lat             float32       `json:"lat"`
-	Lng             float32       `json:"lng"`
+	Distance        float64       `json:"distance"`
+	Lat             float64       `json:"lat"`
+	Lng             float64       `json:"lng"`
 	RegionID        int           `json:"regionId"`
 	StationInfos    []StationInfo `json:"stationInfos"`
-	X               float32       `json:"x"`
-	Y               float32       `json:"y"`
-	Z               float32       `json:"z"`
+	X               float64       `json:"x"`
+	Y               float64       `json:"y"`
+	Z               float64       `json:"z"`
 	Properties      Properties    `json:"properties"`
-	SumDistance     float32       `json:"sumDistance"`     // 这个定义用在计算，原始的 UWB Terminal MQTT Server 中不存在。
+	SumDistance     float64       `json:"sumDistance"`     // 这个定义用在计算，原始的 UWB Terminal MQTT Server 中不存在。
 	InCacheDateTime time.Time     `json:"inCacheDatetime"` // 这个定义用于计算最后一次获取时间是否超过告警时间，原始 UWB Terminal MQTT Server 中不存在
+	SiteFence       []Point       `json:"siteFence"`       // 这个定义用于获取场地电子围栏信息
 }
 
 type StationInfo struct {

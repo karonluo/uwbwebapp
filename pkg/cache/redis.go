@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 	"uwbwebapp/conf"
 	"uwbwebapp/pkg/entities"
@@ -22,6 +23,7 @@ func InitRedisDatabase() bool {
 		Addr:     rdbconf.Host + ":" + rdbconf.Port,
 		Password: rdbconf.Password,
 		DB:       rdbconf.DBId, // use default DB
+		PoolSize: 100,          // 连接池
 	})
 	ctx := context.Background()
 	result := RedisDatabase.Ping(ctx)
@@ -55,13 +57,40 @@ func SetUserToRedis(user entities.SysUser, timeOutDurationMinute int) {
 
 }
 
+func EnumAllUWBBaseStationsBySiteIdFromRedis(siteId string) []entities.UWBBaseStation {
+	var result []entities.UWBBaseStation
+	rctx := context.Background()
+	keyList := RedisDatabase.Keys(rctx, fmt.Sprintf("UWBBaseStation_%s_*", siteId)).Val()
+	for _, key := range keyList {
+		var station entities.UWBBaseStation
+		if err := json.Unmarshal([]byte(RedisDatabase.Get(rctx, key).Val()), &station); err == nil {
+			result = append(result, station)
+
+		}
+	}
+	return result
+}
+
+func SetAllUWBBaseStationsToRedis(stations []entities.UWBBaseStation) {
+	for _, station := range stations {
+		SetUWBBaseStationToRedis(station)
+	}
+}
+
+func SetUWBBaseStationToRedis(station entities.UWBBaseStation) {
+	rctx := context.Background()
+	strStation, _ := json.Marshal(station)
+	RedisDatabase.Set(rctx, fmt.Sprintf("UWBBaseStation_%s_%s", station.SiteID, station.Code), string(strStation), 24*time.Hour)
+	defer rctx.Done()
+}
+
 // 将字典表放入到 Redis 缓存中
 func SetAllDictsToRedis(dicts []entities.SysDict) {
 
 	rctx := context.Background()
 	for _, dict := range dicts {
 		bytesDict, _ := json.Marshal(dict)
-		RedisDatabase.Set(rctx, "dict_"+dict.Code, string(bytesDict), 24*time.Hour)
+		RedisDatabase.Set(rctx, "UWB_dict_"+dict.Code, string(bytesDict), 24*time.Hour)
 	}
 
 }
@@ -70,12 +99,12 @@ func SetAllDictsToRedis(dicts []entities.SysDict) {
 func SetDictToRedis(dict *entities.SysDict) {
 	rctx := context.Background()
 	bytesDict, _ := json.Marshal(dict)
-	RedisDatabase.Set(rctx, "dict_"+dict.Code, string(bytesDict), 24*time.Hour)
+	RedisDatabase.Set(rctx, "UWB_dict_"+dict.Code, string(bytesDict), 24*time.Hour)
 }
 func GetDictFromRedis(dictCode string) (entities.SysDict, error) {
 	rctx := context.Background()
 	var dict entities.SysDict
-	result, er := RedisDatabase.Get(rctx, "dict_"+dictCode).Result()
+	result, er := RedisDatabase.Get(rctx, "UWB_dict_"+dictCode).Result()
 	if er == nil {
 		er = json.Unmarshal([]byte(result), &dict)
 	}
@@ -171,6 +200,7 @@ func GetUWBTerminalTagFromRedis(swimmerId string) (entities.UWBTerminalMQTTInfor
 	} else {
 		err = json.Unmarshal([]byte(result), &uwbTerminal)
 	}
+	defer rctx.Done()
 	return uwbTerminal, err
 }
 
@@ -185,11 +215,52 @@ func ClearAlertInformationFromRedis(swimmerId string) {
 	RedisDatabase.Set(rctx, fmt.Sprintf("ClearAlertInfor_%s", swimmerId), "clear", 5*time.Minute)
 	RedisDatabase.Del(rctx, fmt.Sprintf("AlertInfor_%s", swimmerId))
 }
-func EnumAllAlertInformationFromRedis() []entities.AlertInformation {
+func EnumAllAlertInformationFromRedis() ([]entities.AlertInformation, error) {
 	// 获取所有危险告警
 	var alerts []entities.AlertInformation
-	return alerts
+	var strErrs []string
+	rctx := context.Background()
+	res, err := RedisDatabase.Keys(rctx, "AlertInfor_*").Result()
+	if err == nil {
+		for _, re := range res {
+			re, err = RedisDatabase.Get(rctx, re).Result()
+			if err == nil {
 
+			} else {
+				strErrs = append(strErrs, err.Error())
+			}
+		}
+		if len(strErrs) > 0 {
+			err = fmt.Errorf(strings.Join(strErrs, ";"))
+		}
+	}
+
+	return alerts, err
+
+}
+func GetTopSiteFence(siteId string) (entities.SiteFence, error) {
+	var fence entities.SiteFence
+	var err error
+	rctx := context.Background()
+	key := fmt.Sprintf("SiteTopFence_%s", siteId)
+	defer rctx.Done()
+	if tmp, err := RedisDatabase.Exists(rctx, key).Result(); nil == err && tmp > 0 {
+		sFence := RedisDatabase.Get(rctx, key).Val()
+		err = json.Unmarshal([]byte(sFence), &fence)
+		return fence, err
+	}
+	err = fmt.Errorf("not found in cache")
+	return fence, err
+
+}
+
+func SetTopSiteFence(fence *entities.SiteFence) {
+	rctx := context.Background()
+	key := fmt.Sprintf("SiteTopFence_%s", fence.SiteID)
+	var bFence []byte
+	bFence, _ = json.Marshal(fence)
+	RedisDatabase.Set(rctx, key, bFence, 24*time.Hour)
+	defer rctx.Done()
 }
 
 // TODO: 需要在 BIZ 中编写 UWBTERMINAL 的业务代码。

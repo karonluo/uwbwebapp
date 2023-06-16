@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,7 +12,6 @@ import (
 	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/entities"
 
-	"github.com/google/uuid"
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/websocket"
@@ -80,15 +80,23 @@ func AlertWebSocketHandle(app *iris.Application, path string) {
 	}
 	app.Get(path, websocket.Handler(GlobalAlertWebSocket.ws))
 }
+
 func BoardcastToAlertWebSocketClient() {
 	for {
-		time.Sleep(1 * time.Second)
 		cons := GlobalAlertWebSocket.conns
-		for conn, _ := range cons {
-			infor := entities.AlertInformation{Message: "Hello,World!!!", SwimmerId: uuid.NewString()}
-			sendData, _ := json.Marshal(infor)
-			conn.Socket().WriteText(sendData, 5*time.Second)
+		rctx := context.Background()
+		res, err := cache.RedisDatabase.Keys(rctx, "AlertInfor_*").Result()
+		if err == nil {
+			for _, re := range res {
+				re, err = cache.RedisDatabase.Get(rctx, re).Result()
+				if err == nil {
+					for conn := range cons {
+						conn.Socket().WriteText([]byte(re), 5*time.Second)
+					}
+				}
+			}
 		}
+		time.Sleep(1 * time.Second)
 	}
 }
 

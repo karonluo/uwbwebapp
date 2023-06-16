@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 	"uwbwebapp/conf"
@@ -47,7 +47,7 @@ func UWBDevicePlatformLogin(fouceRefresh bool) (entities.UWBDevicePlatformLoginI
 		req, _ := http.NewRequest("POST", loginInterface, bytes.NewReader(bytesData))
 		req.Header.Add("Content-Type", "application/json")
 		resp, _ := client.Do(req)
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		err = json.Unmarshal(body, &uwbLoginInfo)
 		uwbLoginInfo.Data.AccessToken = fmt.Sprintf("Bearer %s", uwbLoginInfo.Data.AccessToken)
 		fmt.Printf("登录成功, Token: %s", uwbLoginInfo.Data.AccessToken)
@@ -100,7 +100,7 @@ func UWBDevicePlatformUpdateTerminal(swimmerDisplayName string, swimmerGender st
 		req.Header.Add("Content-Type", "application/json")
 		req.Header.Add("Authorization", loginInfo.Data.AccessToken)
 		resp, _ := client.Do(req)
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		result = string(body)
 	}
 
@@ -142,7 +142,7 @@ func UWBDevicePlatformCreateTerminal(swimmerDisplayName string, swimmerGender st
 		req.Header.Add("Content-Type", "application/json")
 		req.Header.Add("Authorization", loginInfo.Data.AccessToken)
 		resp, _ := client.Do(req)
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		result = string(body)
 	}
 
@@ -169,7 +169,7 @@ func UWBDevicePlatformGetTerminal(serialNumber string) (string, error) {
 		req.Header.Add("Content-Type", "application/json")
 		req.Header.Add("Authorization", loginInfo.Data.AccessToken)
 		resp, _ := client.Do(req)
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		result = string(body)
 
 	} else {
@@ -204,7 +204,7 @@ func UWBDevicePlatformQueryTerminal(queryCondition entities.QueryCondition) (str
 		req.Header.Add("Content-Type", "application/json")
 		req.Header.Add("Authorization", loginInfo.Data.AccessToken)
 		resp, _ := client.Do(req)
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		result = string(body)
 	} else {
 		fmt.Println(err.Error())

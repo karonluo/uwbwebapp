@@ -246,3 +246,25 @@ func WSEnumSysUsersFromSportsCompanyIds(ctx iris.Context) {
 	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)
 }
+
+// 用户绑定角色
+func WSSysUserJoinInSysRoles(ctx iris.Context) {
+	message := WebServiceMessage{Message: true, StatusCode: 200}
+	page_ids := strings.Split(ctx.FormValue("page_ids"), ",")
+	role_id := ctx.FormValue("role_id")
+	err := biz.ClearSysRoleSysFuncPages(role_id)
+	if err == nil {
+		if len(page_ids) > 0 && page_ids[0] != "" {
+			err = biz.SysRoleJoinInSysFuncPages(role_id, page_ids)
+			if err != nil {
+				message.StatusCode = 500
+				message.Message = err.Error()
+			}
+		}
+	} else {
+		message.StatusCode = 500
+		message.Message = err.Error()
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}

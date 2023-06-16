@@ -99,3 +99,8 @@ func RemoveSystemUsersFromGroup(userIds []string, groupId string) entities.EROK 
 	}
 	return erok
 }
+
+func EnumSystemUsersFromGroup(groupId string) ([]entities.SysUser, error) {
+
+	return dao.EnumSystemUsersFromGroup(groupId)
+}

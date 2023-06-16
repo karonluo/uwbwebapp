@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -16,7 +15,9 @@ import (
 	"uwbwebapp/pkg/cache"
 	"uwbwebapp/pkg/entities"
 
+	"github.com/ahmetb/go-linq"
 	"github.com/google/uuid"
+	"github.com/paulsmith/gogeos/geos"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 )
@@ -31,29 +32,6 @@ func SHA1(s string) string {
 	o := sha1.New()
 	o.Write([]byte(s))
 	return hex.EncodeToString(o.Sum(nil))
-}
-
-// 将 struct 对象转换成 map
-func ReflectMethod(obj interface{}) map[string]interface{} {
-	t := reflect.TypeOf(obj)
-	v := reflect.ValueOf(obj)
-
-	var data = make(map[string]interface{})
-	for i := 0; i < t.NumField(); i++ {
-		data[strings.ToLower(t.Field(i).Name)] = v.Field(i).Interface()
-	}
-	return data
-}
-
-func HaveElementInRange(objs []interface{}, obj interface{}) bool {
-	var result bool = false
-	for _, tmpObj := range objs {
-		if reflect.TypeOf(tmpObj) == reflect.TypeOf(obj) && tmpObj == obj {
-			result = true
-			break
-		}
-	}
-	return result
 }
 
 /*
@@ -105,6 +83,22 @@ func ProcessError(moduleFuncMsg string, codeMsg string, err error, codeFilePath 
 	log.UserName = "admin"
 	log.LogType = "error"
 	WriteSystemLog(&log)
+}
+
+// HaveElementInRange 接收一个 interface 类型的切片和一个 interface 类型的元素，
+// 判断切片中是否存在与给定元素类型相同且值相等的元素。
+// 如果存在则返回 true，否则返回 false。
+func HaveElementInRange(objs []interface{}, obj interface{}) bool {
+	objType := reflect.TypeOf(obj)
+
+	for _, tmpObj := range objs {
+		// 检查元素类型和值是否和给定元素相同
+		if reflect.TypeOf(tmpObj) == objType && tmpObj == obj {
+			return true
+		}
+	}
+
+	return false
 }
 
 // 生成查询条件对象
@@ -203,27 +197,17 @@ func CheckNoDate(date time.Time) bool {
 @return bool 返回是否有交集
 */
 func CheckTimesHasOverlap(dynaStartTime time.Time, dynaEndTime time.Time, fixedStartTime time.Time, fixedEndTime time.Time) (bool, error) {
-	result := false
-	var err error
-	if dynaStartTime.Format(GOOGLE_DATETIME_FORMAT_NO_TIME) == "0001-01-01" ||
-		dynaEndTime.Format(GOOGLE_DATETIME_FORMAT_NO_TIME) == "0001-01-01" ||
-		fixedStartTime.Format(GOOGLE_DATETIME_FORMAT_NO_TIME) == "0001-01-01" ||
-		fixedEndTime.Format(GOOGLE_DATETIME_FORMAT_NO_TIME) == "0001-01-01" {
-		err = fmt.Errorf("给定的日期时间参数无效")
-		result = false
-	} else {
-		if dynaEndTime.Before(fixedStartTime) || dynaStartTime.After(fixedEndTime) {
-			// 结束日期时间在指定开始日期之前或者开始日期时间在指定结束日期时间之后肯定没有交集
-			result = false
-		} else {
-			result = true
-		}
+	if dynaStartTime.IsZero() || dynaEndTime.IsZero() || fixedStartTime.IsZero() || fixedEndTime.IsZero() {
+		return false, fmt.Errorf("给定的日期时间参数无效")
 	}
-	return result, err
-
+	if dynaEndTime.Before(fixedStartTime) || dynaStartTime.After(fixedEndTime) {
+		// 结束日期时间在指定开始日期之前或者开始日期时间在指定结束日期时间之后肯定没有交集
+		return false, nil
+	}
+	return true, nil
 }
 
-// 移除指定元素
+// 移除指定字符串元素
 func DeleteStringSlice(elems []string, elem string) []string {
 	j := 0
 	for _, v := range elems {
@@ -235,62 +219,64 @@ func DeleteStringSlice(elems []string, elem string) []string {
 	return elems[:j]
 }
 
-func CheckPointInPolygon(point entities.Point, area []entities.Point) bool {
-	// 目标点的x, y坐标
-	x := point.X
-	y := point.Y
-
-	// 多边形的点数
-	count := len(area)
-
-	// 点是否在多边形中
-	var inInside bool
-
-	// 浮点类型计算与0的容差
-	precision := 2e-10
-
-	// 依次计算每条边，根据每边两端点和目标点的状态栏判断
-	for i, j := 0, count-1; i < count; j, i = i, i+1 {
-		// 记录每条边上的两个点坐标
-		x1 := area[i].X
-		y1 := area[i].Y
-		x2 := area[j].X
-		y2 := area[j].Y
-
-		// 判断点与多边形顶点是否重合
-		if (x1 == x && y1 == y) || (x2 == x && y2 == y) {
-			return true
+// 移除指定元素
+func DeleteSlice[T any](elems []T, elem T, compare func(a, b T) bool) []T {
+	var filtered []T
+	for _, v := range elems {
+		if !compare(v, elem) {
+			filtered = append(filtered, v)
 		}
+	}
+	return filtered
+}
 
-		// 判断点是否在水平直线上
-		if (y == y1) && (y == y2) {
-			return true
-		}
+// 移除指定元素 linq 方案
+func DeleteSliceByLinQ(elems []interface{}, elem interface{}, compare func(a, b interface{}) bool) []interface{} {
+	var filtered []interface{}
+	query := linq.From(elems).Where(func(v interface{}) bool {
+		return !compare(v, elem)
+	})
+	query.ToSlice(&filtered)
+	return filtered
+}
 
-		// 判断线段两端点是否在射线两侧
-		if (y > y1 && y < y2) || (y < y1 && y > y2) {
-			// 斜率
-			k := (x2 - x1) / (y2 - y1)
+func GetGatewayIP(ip string) string {
+	ips := strings.Split(ip, ".")
+	ip = fmt.Sprintf("%s.%s.%s.1", ips[0], ips[1], ips[2])
+	return ip
+}
 
-			// 相交点的 x 坐标
-			_x := x1 + k*(y-y1)
-
-			// 点在多边形的边上
-			if _x == x {
-				return true
-			}
-
-			// 浮点类型计算容差
-			if math.Abs(_x-x) < precision {
-				return true
-			}
-
-			// 射线穿过多边形的边
-			if _x > x {
-				inInside = !inInside
+// UseGeosInPolygon 使用 GEOS 库判断给定点是否在多边形内部
+// 参数：
+//   - point: 需要判断的点
+//   - polygon: 多边形的顶点列表
+//
+// 返回值：
+//   - bool: 点是否在多边形内部
+//   - error: 若出现错误则返回错误信息，否则返回 nil
+func UseGeosInPolygon(point entities.Point, polygon []entities.Point) (bool, error) {
+	var result bool = false
+	// var coords []geos.Coord
+	// 将多边形顶点转换为 GEOS 库的坐标格式
+	coords := make([]geos.Coord, 0, len(polygon))
+	for _, p := range polygon {
+		coords = append(coords, geos.Coord{X: p.X, Y: p.Y})
+	}
+	// 创建 GEOS 库的线性环
+	shell, err := geos.NewLinearRing(coords...)
+	if err == nil {
+		// 创建 GEOS 库的多边形
+		var geosPolygon *geos.Geometry
+		geosPolygon, err = geos.PolygonFromGeom(shell)
+		if err == nil {
+			// 创建 GEOS 库的点
+			var geosPoint *geos.Geometry
+			geosPoint, err = geos.NewPoint(geos.Coord{X: point.X, Y: point.Y})
+			if err == nil {
+				// 判断点是否在多边形内部
+				result, err = geosPolygon.Contains(geosPoint)
 			}
 		}
 	}
-
-	return inInside
+	return result, err
 }

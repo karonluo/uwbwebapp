@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 	"uwbwebapp/pkg/cache"
@@ -13,6 +14,27 @@ import (
 	"golang.org/x/net/context"
 )
 
+// 通过游泳者唯一编号和未出场状态获取日程信息
+func GetSiteIdBySwimmerIdAndNoExitSite(swimmerId string) (string, error) {
+	var err error
+	siteId := ""
+	rctx := context.Background()
+	key := fmt.Sprintf("SwimmerOnSite_%s", swimmerId)
+	if cache.RedisDatabase.Exists(rctx, key).Val() > 0 {
+		siteId = cache.RedisDatabase.Get(rctx, key).Val()
+		if siteId == "" {
+			err = fmt.Errorf("未找到该游泳者所在泳池")
+		}
+	} else {
+		var cal entities.SwimmerCalendar
+		cal, err = dao.GetSwimmerCalendarBySwimmerIdAndNoExitSite(swimmerId)
+		if err == nil {
+			cache.RedisDatabase.Set(rctx, key, cal.SiteID, 24*time.Hour)
+		}
+	}
+	return siteId, err
+}
+
 func EnumSwimmerCalendarByDateScope(siteId string, date entities.BetweenDatetime) ([]entities.SwimmerCalendar, int64, error) {
 	return dao.EnumSwimmerCalendarByDateScope(siteId, date)
 }
@@ -20,6 +42,11 @@ func EnumSwimmerCalendarByDateScope(siteId string, date entities.BetweenDatetime
 // 获取所有在场游泳者
 func EnumAllSwimmerCalendarsOnSite() ([]entities.SwimmerCalendar, error) {
 	return dao.EnumAllSwimmerCalendarsOnSite()
+}
+
+// 获取所有指定场所的在场游泳者
+func EnumAllSwimmerCalendarsOnSiteBySiteId(siteId string) ([]entities.SwimmerCalendar, error) {
+	return dao.EnumAllSwimmerCalendarsOnSiteBySiteId(siteId)
 }
 
 // 判断游泳者是否在场
@@ -68,6 +95,7 @@ func SwimmerEnterToSite(calendar *entities.SwimmerCalendar) ([]string, []string)
 			err = dao.CreateSwimmerCalendar(calendar)
 			rctx := context.Background()
 			cache.RedisDatabase.Del(rctx, fmt.Sprintf("UWBTag_%s", calendar.SwimmerID)) // 若有该标签数据则删除。
+			defer rctx.Done()
 			if err != nil {
 				errs = append(errs, err.Error())
 			} else {
@@ -103,6 +131,7 @@ func SwimmerEnterToSite(calendar *entities.SwimmerCalendar) ([]string, []string)
 					err = dao.CreateSwimmerCalendar(calendar)
 					rctx := context.Background()
 					cache.RedisDatabase.Del(rctx, fmt.Sprintf("UWBTag_%s", calendar.SwimmerID)) // 若有该标签数据则删除。
+					defer rctx.Done()
 					if err != nil {
 						errs = append(errs, err.Error())
 					} else {
@@ -132,6 +161,7 @@ func SwimmerEnterToSite(calendar *entities.SwimmerCalendar) ([]string, []string)
 					}
 					rctx := context.Background()
 					cache.RedisDatabase.Del(rctx, fmt.Sprintf("UWBTag_%s", calendar.SwimmerID)) // 若有该标签数据则删除。
+					defer rctx.Done()
 				}
 			}
 		}
@@ -189,6 +219,11 @@ func SwimmerExitFromSite(calendar *entities.SwimmerCalendar) ([]string, []string
 					if err != nil {
 						errs = append(errs, err.Error())
 					} else {
+						// 这里清空关于入场游泳者场地编号相关缓存。
+						rctx := context.Background()
+						key := fmt.Sprintf("SwimmerOnSite_%s", tmpCalendar.SwimmerID)
+						cache.RedisDatabase.Del(rctx, key) // 若有该标签数据则删除。
+						defer rctx.Done()
 						ids = append(ids, tmpCalendar.ID)
 					}
 				}
@@ -303,4 +338,32 @@ func SwimmerCalendarPlanToSite(swimmers []entities.Swimmer, siteId string, begin
 	}
 
 	return ids, errs
+}
+
+func EnumSwimmerCalendarReportForSwimmer(swimmerId string, date entities.BetweenDatetime) ([]entities.SwimmerCalendar, error) {
+	return dao.EnumSwimmerCalendarReportForSwimmer(swimmerId, date)
+}
+
+func GetSiteFenceForSwimmer(swimmerId string) ([]entities.Point, error) {
+	var err error
+	var fence entities.SiteFence
+	var points []entities.Point
+	// 数据库方式 dao.Database.Raw("")
+	// cache 方式
+	sql := `SELECT
+	* 
+FROM
+	site_fence 
+WHERE
+site_id IN ( 
+	SELECT site_id FROM swimmer_calendars WHERE 
+		enter_datetime <> '0001-01-01 00:00:00' AND 
+		exit_datetime = '0001-01-01 00:00:00' AND 
+		swimmer_id = ?
+		ORDER BY modify_datetime DESC LIMIT 1 ) ORDER BY modify_datetime DESC LIMIT 1`
+	err = dao.Database.Raw(sql, swimmerId).Find(&fence).Error
+	if err == nil {
+		err = json.Unmarshal([]byte(fence.Coordinate), &points)
+	}
+	return points, err
 }

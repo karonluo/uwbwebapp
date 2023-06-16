@@ -137,3 +137,32 @@ func DevicePing(ctx iris.Context) {
 	fmt.Println(string(strInfo))
 	ctx.Text("Pong")
 }
+
+func NoDogSplashAuthorizedService(ctx iris.Context) {
+	/*
+		- `clientip`：客户端设备的 IP 地址。
+		- `clientmac`：客户端设备的 MAC 地址。
+		- `gatewayname`：Nodogsplash 网关的名称。
+		- `tok`：一个唯一的身份验证令牌，用于识别客户端。
+		- `redir`：客户端在认证成功后应重定向的原始请求 URL。
+	*/
+	clientIP := ctx.FormValue("ip")
+	clientMAC := ctx.FormValue("mac")
+	gatewayName := ctx.FormValue("gn")
+	tok := ctx.FormValue("tok")
+	redir := ctx.FormValue("url")
+	// http://$gatewayname:2050/nodogsplash_auth?token=$tok&redir=$redir
+	// 记录 clientIP\clientMAC
+	fmt.Println(clientIP)    // 访问者IP地址
+	fmt.Println(clientMAC)   // 访问者客户端MAC地址
+	fmt.Println(redir)       // 访问者访问网站地址
+	fmt.Println(gatewayName) // 证明 路由器ID, 比如泰国某个餐馆
+
+	// 重定向边缘软路由器NodogSplash认证地址
+	// ctx.Redirect(fmt.Sprintf("http://%s:2050/nodogsplash_auth?tok=%s&redir=%s", gatewayName, tok, redir), 302)
+	// ctx.Text(fmt.Sprintf("http://%s:2050/nodogsplash_auth/?token=%s&redir=%s", tools.GetGatewayIP(clientIP), tok, redir))
+	ctx.Redirect(fmt.Sprintf("http://%s:2050/nodogsplash_auth/?token=%s&redir=%s", tools.GetGatewayIP(clientIP), tok, redir),
+		302)
+	// http://路由器IP:2050/nodogsplash_auth/?tok=12345&mac=AA:BB:CC:DD:EE:FF&ip=192.168.1.2
+	// http: //192.168.8.1:2050/nodogsplash_auth/?token=56183885&redir=http%3a%2f%2f192.168.8.1%2f
+}

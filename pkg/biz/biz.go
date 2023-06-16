@@ -3,6 +3,9 @@ package biz
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
 	"strings"
 	"time"
 	"uwbwebapp/conf"
@@ -10,6 +13,9 @@ import (
 	"uwbwebapp/pkg/dao"
 	"uwbwebapp/pkg/entities"
 
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
 	"github.com/google/uuid"
 )
 
@@ -78,4 +84,38 @@ func InitSystemLogger() {
 	}
 	cache.WriteSystemLogToRedis(&log)
 	fmt.Println("......完成")
+}
+
+func SpeakMessage(message string) string {
+	cmd := exec.Command("ekho", message)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	return string(out)
+}
+
+func SpeakMessageAlert() {
+	audioFilePath := `./audio/yzjg.mp3`
+	audioFile, err := os.Open(audioFilePath)
+
+	if err == nil {
+		streamer, format, err := mp3.Decode(audioFile)
+		if err != nil {
+			panic(err)
+		}
+		defer streamer.Close()
+		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+		// 播放声音
+		done := make(chan bool)
+		speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+			done <- true
+		})))
+
+		// 等待音频播放完成
+		<-done
+	}
+	defer audioFile.Close()
 }

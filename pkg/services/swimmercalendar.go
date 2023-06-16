@@ -160,3 +160,38 @@ func WSSwimmerCalendarPlanCancel(ctx iris.Context) {
 	ctx.StatusCode(message.StatusCode)
 	ctx.JSON(message)
 }
+
+func WSEnumSwimmerCalendarReportForSwimmer(ctx iris.Context) {
+	message := WebServiceMessage{Message: "OK", StatusCode: 200}
+	id := ctx.FormValue("swimmer_id")
+	var endDatetime time.Time
+	var calendars []entities.SwimmerCalendar
+	beginDatetime, err := time.Parse(tools.GOOGLE_DATETIME_FORMAT, ctx.FormValue("begin_datetime"))
+	if err == nil {
+		endDatetime, err = time.Parse(tools.GOOGLE_DATETIME_FORMAT, ctx.FormValue("end_datetime"))
+		if err == nil {
+			var date entities.BetweenDatetime
+			date.BeginDatetime = beginDatetime
+			date.EndDatetime = endDatetime
+			calendars, err = biz.EnumSwimmerCalendarReportForSwimmer(id, date)
+			if err == nil {
+				message.Message = calendars
+			} else {
+				message.StatusCode = 500
+				message.Message = err
+				tools.ProcessError("services.WSEnumSwimmerCalendarReportForSwimmer", `calendars, err = biz.EnumSwimmerCalendarReportForSwimmer(id, date)`, err)
+			}
+		} else {
+			message.StatusCode = 500
+			message.Message = err
+			tools.ProcessError("services.WSEnumSwimmerCalendarReportForSwimmer", `endDatetime, err = time.Parse(tools.GOOGLE_DATETIME_FORMAT, ctx.FormValue("end_datetime"))`, err)
+		}
+	} else {
+		message.StatusCode = 500
+		message.Message = err
+		tools.ProcessError("services.WSEnumSwimmerCalendarReportForSwimmer", `endDatetime, err = time.Parse(tools.GOOGLE_DATETIME_FORMAT, ctx.FormValue("end_datetime"))`, err)
+
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}

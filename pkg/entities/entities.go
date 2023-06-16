@@ -20,8 +20,8 @@ func (btet *BetweenDatetime) String() (string, string) {
 }
 
 type Point struct {
-	X float64
-	Y float64
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
 }
 
 type AlertInformation struct {
@@ -31,8 +31,8 @@ type AlertInformation struct {
 	SwimmerGender      string  `json:"swimmerGender"`
 	DevEui             string  `json:"devEui"`
 	Type               string  `json:"type"` // normal/danger
-	X                  float32 `json:"x"`
-	Y                  float32 `json:"y"` // 该游泳者相关告警的最后一次出现的坐标
+	X                  float64 `json:"x"`
+	Y                  float64 `json:"y"` // 该游泳者相关告警的最后一次出现的坐标
 }
 
 type EROK struct {

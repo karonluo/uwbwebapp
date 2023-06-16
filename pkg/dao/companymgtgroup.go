@@ -109,3 +109,11 @@ func SetSystemUserToGroup(userId string, groupId string) error {
 func RemoveSystemUserFromGroup(userId string, groupId string) error {
 	return Database.Exec("DELETE FROM company_group_right_users WHERE sys_user_id = ? and co_group_id = ?", userId, groupId).Error
 }
+
+func EnumSystemUsersFromGroup(groupId string) ([]entities.SysUser, error) {
+	var users []entities.SysUser
+	sql := `SELECT u.id, u.login_name, u.display_name FROM company_group_right_users AS mgtu LEFT JOIN sys_users AS u ON mgtu.sys_user_id = u.id 
+	WHERE mgtu.co_group_id = ?`
+	err := Database.Raw(sql, groupId).Find(&users).Error
+	return users, err
+}

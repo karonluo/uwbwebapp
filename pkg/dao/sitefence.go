@@ -18,6 +18,11 @@ func EnumSiteFences(siteId string) ([]entities.SiteFence, error) {
 	err := Database.Table("site_fence").Select("site_id, code, modifier, creator, modify_datetime, create_datetime").Where("site_id=?", siteId).Order("modify_datetime desc").Find(&fences).Error
 	return fences, err
 }
+func GetTopSiteFence(siteId string) (entities.SiteFence, error) {
+	var fence entities.SiteFence
+	err := Database.Model(fence).Where("site_id=?", siteId).Order("modify_datetime DESC").First(&fence).Error
+	return fence, err
+}
 func EnumSiteFenceCodes(siteId string) ([]string, error) {
 	var codes []string
 	err := Database.Table("site_fence").Select("code").Where("site_id=?", siteId).Order("modify_datetime desc").Find(&codes).Error

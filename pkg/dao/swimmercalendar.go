@@ -96,3 +96,25 @@ func EnumAllSwimmerCalendarsOnSiteBySiteId(siteId string) ([]entities.SwimmerCal
 	return calendars, err
 
 }
+
+func EnumSwimmerCalendarReportForSwimmer(swimmerId string, date entities.BetweenDatetime) ([]entities.SwimmerCalendar, error) {
+	var results []entities.SwimmerCalendar
+
+	res := Database.Raw(`SELECT * FROM swimmer_calendars WHERE 
+		(enter_datetime between ? and ?) AND swimmer_id=?`,
+		date.BeginDatetime.Format(`2006-01-02 15:04:05.000000000`),
+		date.EndDatetime.Format(`2006-01-02 15:04:05.000000000`),
+		date.BeginDatetime.Format(`2006-01-02 15:04:05.000000000`),
+		date.EndDatetime.Format(`2006-01-02 15:04:05.000000000`),
+		swimmerId).Order("modify_datetime DESC").Find(&results)
+
+	return results, res.Error
+}
+
+// 通过游泳者唯一编号和未出场状态获取日程信息
+func GetSwimmerCalendarBySwimmerIdAndNoExitSite(swimmerId string) (entities.SwimmerCalendar, error) {
+	var result entities.SwimmerCalendar
+	r := Database.Model(result).Where("swimmer_id = ? AND enter_datetime <> '0001-01-01 00:00:00' AND exit_datetime = '0001-01-01 00:00:00'", swimmerId).First(&result)
+	return result, r.Error
+
+}

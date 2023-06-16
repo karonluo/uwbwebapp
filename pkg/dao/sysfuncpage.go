@@ -45,6 +45,7 @@ func DeleteSysFuncPage(id string) error {
 		if err == nil {
 			rctx := context.Background()
 			cache.RedisDatabase.Del(rctx, fmt.Sprintf("funcpage_%s|%s", page.URLAddress, page.URLMethod))
+			defer rctx.Done()
 		}
 	}
 	return err

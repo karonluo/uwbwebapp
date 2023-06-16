@@ -17,17 +17,17 @@ func InitDatabase() bool {
 	if Database == nil {
 		fmt.Print("数据库初始化")
 		dbconf := conf.WebConfiguration.DBConf
-		dsn := "host=" + dbconf.Host + " user=" + dbconf.User + " password=" + dbconf.Password + " dbname=" + dbconf.DBName + " port=" + dbconf.Port + " sslmode=disable TimeZone=Asia/Shanghai"
+		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", dbconf.Host, dbconf.User, dbconf.Password, dbconf.DBName, dbconf.Port)
+		// dsn := "host=" + dbconf.Host + " user=" + dbconf.User + " password=" + dbconf.Password + " dbname=" + dbconf.DBName + " port=" + dbconf.Port + " sslmode=disable TimeZone=Asia/Shanghai"
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: logger.Default.LogMode(logger.Error)})
-
 		if err == nil {
-
 			sql, _ := db.DB()
 			sql.SetConnMaxIdleTime(time.Hour)
 			sql.SetConnMaxLifetime(24 * time.Hour)
-			sql.SetMaxIdleConns(100)
-			sql.SetMaxOpenConns(200)
+			sql.SetMaxIdleConns(1000)
+			sql.SetMaxOpenConns(100000)
+
 			Database = db
 			fmt.Println("......成功")
 			result = true

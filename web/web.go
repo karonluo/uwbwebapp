@@ -64,9 +64,7 @@ func Before(ctx iris.Context) {
 		ctx.StatusCode(204)
 		return
 	}
-
 	requestPath := ctx.RequestPath(true)
-	fmt.Println(requestPath)
 	if SkipAuthorizedAddress(requestPath) {
 		ctx.Next()
 	} else {
@@ -74,10 +72,12 @@ func Before(ctx iris.Context) {
 		if authorization == "" {
 			if requestPath != "/login" &&
 				requestPath != "/index" &&
+				requestPath != "/nodog/auth" &&
 				!strings.Contains(requestPath, "/msg") &&
 				!strings.Contains(requestPath, "/alert") {
 				message := WebMessage{Message: "未登录", StatusCode: 401}
 				fmt.Println("Authorization Error!")
+				tools.ProcessError("web.Before", `authorization := ctx.GetHeader("Authorization")`, fmt.Errorf("未登录"))
 				ctx.StatusCode(401)
 				ctx.JSON(message)
 			} else {
@@ -143,6 +143,7 @@ func Before(ctx iris.Context) {
 }
 func Cors(ctx iris.Context) {
 	ctx.Text("")
+
 }
 
 // 绑定 UWB 设备相关WEB服务
@@ -152,11 +153,12 @@ func RegisterUWBMgtServices(app *iris.Application) {
 	app.Get("/uwbtag/query", services.WSQueryUWBTags) // 查询 UWB 标签信息
 	app.Delete("/uwbtag", services.WSDeleteUWBTags)   // 删除 UWB 标签信息
 
-	app.Post("/uwbbasestation", services.WSCreateUWBBaseStation)      // 创建UWB基站信息
-	app.Get("/uwbbasestation/query", services.WSQueryUWBBaseStations) // 查询基站信息
-	app.Delete("/uwbbasestation", services.WSDeleteUWBBaseStations)   // 删除基站信息
-	app.Put("/uwbbasestation", services.WSUpdateUWBBaseStation)       // 更新基站信息
-	app.Get("/uwbbasestation", services.WSGetUWBBaseStationByCode)    // 获取基站信息
+	app.Post("/uwbbasestation", services.WSCreateUWBBaseStation)                // 创建UWB基站信息
+	app.Get("/uwbbasestation/query", services.WSQueryUWBBaseStations)           // 查询基站信息
+	app.Delete("/uwbbasestation", services.WSDeleteUWBBaseStations)             // 删除基站信息
+	app.Put("/uwbbasestation", services.WSUpdateUWBBaseStation)                 // 更新基站信息
+	app.Get("/uwbbasestation", services.WSGetUWBBaseStationByCode)              // 获取基站信息
+	app.Get("/{site_id}/uwbbasestations", services.WSEnumUWBBaseStationBySitId) // 根据场地枚举其所有基站信息
 }
 
 // 绑定用户相关WEB服务
@@ -240,6 +242,7 @@ func RegisterSportsCompanyMgtGroup(app *iris.Application) {
 	app.Put("/comgtgroup", services.WSUpdateSportsCompanyMgtGroup)         // 更新体育公司管理组信息
 	app.Put("/comgtgroup/users", services.WSSetSystemUsersToGroup)         // 设置系统用户到公司管理组
 	app.Delete("/comgtgroup/users", services.WSRemoveSystemUsersFromGroup) // 将系统用户从公司管理组移除
+	app.Get("/comgtgroup/users", services.WSEnumSystemUsersFromGroup)      // 从公司组中获取系统用户（管理员）
 
 }
 
@@ -280,6 +283,9 @@ func RegisterCalendarService(app *iris.Application) {
 
 	// 游泳教练取消训练计划
 	app.Put("/calendar/swimmersite/cancleplaycycle", services.WSSwimmerCalendarPlanCancel)
+
+	// 游泳者历史运动报表
+	app.Get("/calendar/swimmerreport", services.WSEnumSwimmerCalendarReportForSwimmer)
 
 }
 

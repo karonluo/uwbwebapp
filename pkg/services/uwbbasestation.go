@@ -46,6 +46,20 @@ func WSGetUWBBaseStationByCode(ctx iris.Context) {
 	ctx.JSON(message)
 }
 
+func WSEnumUWBBaseStationBySitId(ctx iris.Context) {
+	message := WebServiceMessage{StatusCode: 200, Message: true}
+	stations, err := dao.EnumUWBBaseStationBySiteId(ctx.Params().Get("site_id"))
+	if err != nil {
+		tools.ProcessError("services.WSEnumUWBBaseStationBySitId", `stations, err := dao.EnumUWBBaseStationBySiteId(ctx.Params().Get("site_id"))`, err)
+		message.StatusCode = 500
+		message.Message = err.Error()
+	} else {
+		message.Message = stations
+	}
+	ctx.StatusCode(message.StatusCode)
+	ctx.JSON(message)
+}
+
 // 查询 UWB 基站信息
 func WSQueryUWBBaseStations(ctx iris.Context) {
 	message := WebServiceMessage{Message: "OK", StatusCode: 200}
